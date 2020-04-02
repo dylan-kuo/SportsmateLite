@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Sportsmate</string>
+    <string name="home">Home</string>
+    <string name="personal_match">Personal Match</string>
+    <string name="team_match">Team Match</string>
+    <string name="my_account">My Account</string>
+    <string name="logout">Logout</string>
+    <string name="drawer_open">Drawer Open</string>"
+    <string name="drawer_close">Drawer Close</string>"
+</resources>
+

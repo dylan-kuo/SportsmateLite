@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor"
+    tools:context=".activities.LoginActivity">
+
+
+    <ImageView
+        android:id="@+id/login_icon"
+        android:layout_width="300dp"
+        android:layout_height="240dp"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="TODO"
+        app:srcCompat="@drawable/logo" />
+
+    <EditText
+        android:id="@+id/login_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_icon"
+        android:layout_marginLeft="7dp"
+        android:layout_marginTop="11dp"
+        android:layout_marginRight="7dp"
+        android:background="@drawable/input"
+        android:drawableLeft="@drawable/email"
+        android:ems="10"
+        android:hint="Username"
+        android:inputType="textPersonName"
+        android:padding="10dp" />
+
+    <EditText
+        android:id="@+id/login_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_username"
+        android:layout_marginLeft="7dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="7dp"
+        android:background="@drawable/input"
+        android:drawableLeft="@drawable/password"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:padding="10dp" />
+
+    <Button
+        android:id="@+id/login_button"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/login_password"
+        android:layout_marginLeft="7dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="7dp"
+        android:background="@drawable/button"
+        android:padding="15dp"
+        android:text="Login"
+        android:textColor="@color/colorAccent"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/register_account_link"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_button"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:text="Don't have an account? Sign up Now"
+        android:textAlignment="center"
+        android:textColor="@color/logoRed"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+
+</RelativeLayout>
