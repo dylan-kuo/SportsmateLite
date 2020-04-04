@@ -84,10 +84,11 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
 
         // ******** set mAuth here **********
+        /*
         Object currentUser = null; // testing
         if(currentUser != null) {
             sendUserToMainActivity();
-        }
+        } */
     }
 
     /**
@@ -96,17 +97,14 @@ public class LoginActivity extends AppCompatActivity {
     private void verifyFromSQLite() {
         // Check if username is empty
         if (!inputValidation.isEditTextFilled(userName)) {
-            Toast.makeText(this, "Please enter valid username...", Toast.LENGTH_SHORT).show();
-        }
-
-        // Check if password format is valid
-        if (!inputValidation.isEditTextValid(userName)) {
-            Toast.makeText(this, "Please enter valid password...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Username Cannot Be Empty...", Toast.LENGTH_SHORT).show();
+            return;
         }
 
         // Check if password is empty
         if (!inputValidation.isEditTextFilled(userPassword)) {
-            Toast.makeText(this, "Please enter valid password...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Password Cannot Be Empty...", Toast.LENGTH_SHORT).show();
+            return;
         }
 
         // Validate the user
@@ -114,6 +112,8 @@ public class LoginActivity extends AppCompatActivity {
                 userPassword.getText().toString().trim())) {
             emptyInputEditText();
             sendUserToMainActivity();
+        } else {
+            Toast.makeText(this, "Wrong Username or Password...", Toast.LENGTH_SHORT).show();
         }
     }
     /*   **************   OLD CODE   *******************************
@@ -153,6 +153,9 @@ public class LoginActivity extends AppCompatActivity {
 
     } **********************************************************************  */
 
+    /**
+     * This method is to switch the user to main activity
+     */
     private void sendUserToMainActivity() {
         Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);  // Do this to prevent user from going back to login activity unless clicking logout
@@ -160,7 +163,9 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    // Switch to Register Activity
+    /**
+     * This method is to switch the user to register activity
+     */
     private void sendUserToRegisterActivity() {
         Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(registerIntent);

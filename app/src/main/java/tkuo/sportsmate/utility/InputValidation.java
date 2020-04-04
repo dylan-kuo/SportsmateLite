@@ -40,4 +40,13 @@ public class InputValidation {
         // NOT DONE YET
         return true;
     }
+
+    public boolean isPasswordMatched (EditText editText1, EditText editText2) {
+        String value1 = editText1.getText().toString().trim();
+        String value2 = editText2.getText().toString().trim();
+        if (!value1.equals(value2))
+            return false;
+
+        return true;
+    }
 }

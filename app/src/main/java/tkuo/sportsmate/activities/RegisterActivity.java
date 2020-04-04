@@ -1,127 +1,185 @@
 package tkuo.sportsmate.activities;
 
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.renderscript.ScriptGroup;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import tkuo.sportsmate.R;
+import tkuo.sportsmate.utility.InputValidation;
+import tkuo.sportsmate.sql.DatabaseHelper;
+import tkuo.sportsmate.model.User;
+
+
 
 public class RegisterActivity extends AppCompatActivity {
 
+    private final AppCompatActivity activity = RegisterActivity.this;
+
     private EditText userName, userPassword, userConfirmPassword;
     private Button createAccountButton;
+    private TextView loginLink;
     private ProgressDialog loadingBar;
 
-
+    private InputValidation inputValidation;
+    private DatabaseHelper databaseHelper;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        initViews();
+        initListeners();
+        initObjects();
+    }
 
-
+    /**
+     * This method is to initialize views
+     */
+    private void initViews() {
         userName = (EditText) findViewById(R.id.register_username);
         userPassword = (EditText) findViewById(R.id.register_password);
         userConfirmPassword = (EditText) findViewById(R.id.register_confirm_password);
+        loginLink = (TextView) findViewById(R.id.register_login_link);
         createAccountButton = (Button) findViewById(R.id.register_create_account);
         loadingBar = new ProgressDialog(this);
+    }
 
-
+    /**
+     * This method is to initialize listeners
+     */
+    private void initListeners() {
         createAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createNewAccount();
+                postDataToSQLite();
+            }
+        });
+
+        loginLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendUserToLoginActivity();
             }
         });
     }
 
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        Object currentUser = null;
-
-        // If user is already authenticated, switch straight to main activity
-        if(currentUser != null) {
-            sendUserToMainActivity();
-        }
+    /**
+     * This method is to initialize objects to be used
+     */
+    private void initObjects() {
+        inputValidation = new InputValidation(activity);
+        databaseHelper = new DatabaseHelper(activity);
+        user = new User();
     }
 
+    /**
+     * This method is to validate the input text fields and post data to SQLite
+     */
+    private void postDataToSQLite() {
 
-    private void sendUserToMainActivity() {
-        Intent mainIntent = new Intent(RegisterActivity.this, MainActivity.class);
-        mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);  // Do this to prevent user from going back to Register activity unless clicking logout
-        startActivity(mainIntent);
-        finish();
-    }
+        // Check if username is empty
+        if (!inputValidation.isEditTextFilled(userName)) {
+            Toast.makeText(this, "Username cannot be empty...", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // Check if username format is valid
+        if (!inputValidation.isEditTextValid(userName)) {
+            Toast.makeText(this, "Please enter valid username...", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // Check if password is empty
+        if (!inputValidation.isEditTextFilled(userPassword)) {
+            Toast.makeText(this, "Password cannot be empty...", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // Check if password format is valid
+        if (!inputValidation.isEditTextValid(userPassword)) {
+            Toast.makeText(this, "Please enter valid password...", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // Check if confirm password is empty
+        if (!inputValidation.isEditTextFilled(userConfirmPassword)) {
+            Toast.makeText(this, "Confirm password cannot be empty...", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // Check if confirm password format is valid
+        if (!inputValidation.isEditTextValid(userConfirmPassword)) {
+            Toast.makeText(this, "Please enter confirm password...", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // Check if confirm password matches password
+        if (!inputValidation.isPasswordMatched(userPassword, userConfirmPassword)) {
+            Toast.makeText(this, "Password does not match...", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-    // Create new account
-    private void createNewAccount() {
-        String username = userName.getText().toString();
-        String password = userPassword.getText().toString();
-        String confirmPassword = userConfirmPassword.getText().toString();
+        if (!databaseHelper.checkUser(userName.getText().toString().trim())) {
 
-        // If the username is empty, show the error message
-        if(TextUtils.isEmpty(username)) {
-            Toast.makeText(this, "Please write your username...", Toast.LENGTH_SHORT).show();
-        }
-        // If the password is empty, show the error message
-        else if(TextUtils.isEmpty(password)) {
-            Toast.makeText(this, "Please write your password...", Toast.LENGTH_SHORT).show();
-        }
-        // if the confirm password is empty, show the error message
-        else if(TextUtils.isEmpty(confirmPassword)) {
-            Toast.makeText(this, "Please write your password...", Toast.LENGTH_SHORT).show();
-        }
-        // If the password and confirm password are different, show the error message
-        else if (!password.equals(confirmPassword)) {
-            Toast.makeText(this, "Your password do not match with your confirm password...", Toast.LENGTH_SHORT).show();
-        }
+            user.setUsername(userName.getText().toString().trim());
+            user.setPassword(userPassword.getText().toString().trim());
 
-        // If input data are all correctly typed in, send them to Firebase to validate the authentication
+            databaseHelper.addUser(user);
+            String currentUserName = user.getUsername();
+            emptyInputEditText();
+
+            sendUserToSetupActivity(currentUserName);  // Pass the current username to next activity
+        }
         else {
-            loadingBar.setTitle("Creating New Account");
-            loadingBar.setMessage("Please wait, while we are creating your new Account...");
-            loadingBar.show();
-            loadingBar.setCanceledOnTouchOutside(true);
-
-            /*
-            mAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            // If authenticated successfully, send the user to setup activity
-                            if(task.isSuccessful()) {
-                                sendUserToSetupActivity();
-
-                                Toast.makeText(RegisterActivity.this, "Logged in successfully...", Toast.LENGTH_SHORT).show();
-                                loadingBar.dismiss();
-                            } else {
-                                String message = task.getException().getMessage();
-                                Toast.makeText(RegisterActivity.this, "Error occurred: " + message, Toast.LENGTH_SHORT).show();
-                                loadingBar.dismiss();
-                            }
-                        }
-                    }); */
+            Toast.makeText(this, "Username already exists...", Toast.LENGTH_SHORT).show();
         }
     }
-    // Switch to Setup Activity and clear any other activities on top of it
+
+    /**
+     * This method is to switch the user to setup activity
+     */
     private void sendUserToSetupActivity() {
-        /*
+
         Intent setupIntent = new Intent(RegisterActivity.this, SetupActivity.class);
         setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(setupIntent);
-        finish(); */
+        finish();
+    }
+
+    /**
+     * This method is to switch annd pass the current user's username to setup activity
+     * @param currentUserName
+     */
+    private void sendUserToSetupActivity(String currentUserName) {
+
+        Intent setupIntent = new Intent(RegisterActivity.this, SetupActivity.class);
+        setupIntent.putExtra("current_userName", currentUserName);
+        startActivity(setupIntent);
+        finish();
+    }
+
+    /**
+     * This method is to switch the user to login activity
+     */
+    private void sendUserToLoginActivity() {
+        Intent loginIntent = new Intent(RegisterActivity.this, LoginActivity.class);
+        startActivity(loginIntent);
+    }
+
+    /**
+     * This method is to empty all input edit text
+     */
+    private void emptyInputEditText() {
+        userName.setText(null);
+        userPassword.setText(null);
+        userConfirmPassword.setText(null);
     }
 
 
