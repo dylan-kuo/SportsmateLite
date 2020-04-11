@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class DatabaseHelper extends SQLiteOpenHelper{
+public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Database Version
     private static final int DATABASE_VERSION = 1;
@@ -27,14 +27,14 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     private static final String COLUMN_USER_FIRST_NAME = "user_first_name";
     private static final String COLUMN_USER_LAST_NAME = "user_last_name";
     private static final String COLUMN_USER_GENDER = "user_gender";
-    private static final String COLUMN__USER_USERNAME = "user_username";
-    private static final String COLUMN__USER_PASSWORD = "user_password";
+    private static final String COLUMN_USER_USERNAME = "user_username";
+    private static final String COLUMN_USER_PASSWORD = "user_password";
 
     // Create table sql query
     private String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
             + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_USER_FIRST_NAME
             + " TEXT," + COLUMN_USER_LAST_NAME + " TEXT," + COLUMN_USER_GENDER + " TEXT," +
-            COLUMN__USER_USERNAME + " TEXT," + COLUMN__USER_PASSWORD + " TEXT" + ")";
+            COLUMN_USER_USERNAME + " TEXT," + COLUMN_USER_PASSWORD + " TEXT" + ")";
 
     // Drop table sql query
     private String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_USER;
@@ -77,8 +77,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         values.put(COLUMN_USER_FIRST_NAME, user.getFirstName());
         values.put(COLUMN_USER_LAST_NAME, user.getLastName());
         values.put(COLUMN_USER_GENDER, user.getGender());
-        values.put(COLUMN__USER_USERNAME, user.getUsername());
-        values.put(COLUMN__USER_PASSWORD, user.getPassword());
+        values.put(COLUMN_USER_USERNAME, user.getUsername());
+        values.put(COLUMN_USER_PASSWORD, user.getPassword());
 
         // Inserting Row
         db.insert(TABLE_USER, null, values);
@@ -97,7 +97,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                 COLUMN_USER_FIRST_NAME,
                 COLUMN_USER_LAST_NAME,
                 COLUMN_USER_GENDER,
-                COLUMN__USER_PASSWORD
+                COLUMN_USER_PASSWORD
         };
         // Sorting orders
         String sortOrder =
@@ -128,7 +128,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                 user.setFirstName(cursor.getString(cursor.getColumnIndex(COLUMN_USER_FIRST_NAME)));
                 user.setLastName(cursor.getString(cursor.getColumnIndex(COLUMN_USER_LAST_NAME)));
                 user.setGender(cursor.getString(cursor.getColumnIndex(COLUMN_USER_GENDER)));
-                user.setPassword(cursor.getString(cursor.getColumnIndex(COLUMN__USER_PASSWORD)));
+                user.setPassword(cursor.getString(cursor.getColumnIndex(COLUMN_USER_PASSWORD)));
                 // Adding user record to list
                 userList.add(user);
             } while (cursor.moveToNext());
@@ -152,11 +152,30 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         values.put(COLUMN_USER_FIRST_NAME, user.getFirstName());
         values.put(COLUMN_USER_LAST_NAME, user.getLastName());
         values.put(COLUMN_USER_GENDER, user.getGender());
-        values.put(COLUMN__USER_PASSWORD, user.getPassword());
+        values.put(COLUMN_USER_PASSWORD, user.getPassword());
 
         // Updating row
-        db.update(TABLE_USER, values, COLUMN_USER_ID + " =?",
+        db.update(TABLE_USER, values, COLUMN_USER_ID + " = ?",
                 new String[]{String.valueOf(user.getId())});
+        db.close();
+    }
+
+    /**
+     * This method to update user record
+     *
+     * @param user
+     */
+    public void updateUserSetup(User user) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_USER_FIRST_NAME, user.getFirstName());
+        values.put(COLUMN_USER_LAST_NAME, user.getLastName());
+        values.put(COLUMN_USER_GENDER, user.getGender());
+
+        // Updating row
+        db.update(TABLE_USER, values, COLUMN_USER_USERNAME + " = ? ",
+                new String[]{user.getUsername()});
         db.close();
     }
 
@@ -188,7 +207,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getReadableDatabase();
 
         // Selection criteria
-        String selection = COLUMN__USER_USERNAME + " = ?";
+        String selection = COLUMN_USER_USERNAME + " = ?";
 
         // Selection argument
         String[] selectionArgs = {username};
@@ -213,6 +232,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         if (cursorCount > 0) {
             return true;
         }
+
         return false;
     }
 
@@ -231,7 +251,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         };
         SQLiteDatabase db = this.getReadableDatabase();
         // Selection criteria
-        String selection = COLUMN__USER_USERNAME + " = ?" + " AND " + COLUMN__USER_PASSWORD + " = ?";
+        String selection = COLUMN_USER_USERNAME + " = ?" + " AND " + COLUMN_USER_PASSWORD + " = ?";
 
         // Selection arguments
         String[] selectionArgs = {username, password};

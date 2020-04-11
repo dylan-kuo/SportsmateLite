@@ -2,6 +2,7 @@ package tkuo.sportsmate.utility;
 
 import android.content.Context;
 import android.widget.EditText;
+import android.widget.RadioButton;
 
 
 public class InputValidation {
@@ -23,6 +24,20 @@ public class InputValidation {
      */
     public boolean isEditTextFilled(EditText editText) {
         String value = editText.getText().toString().trim();
+        if (value.isEmpty()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Method to check empty
+     *
+     * @param radioButton
+     */
+    public boolean isRadioButtonFilled(RadioButton radioButton) {
+        String value = radioButton.getText().toString();
         if (value.isEmpty()) {
             return false;
         }

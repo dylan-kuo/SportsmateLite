@@ -19,9 +19,14 @@ import android.widget.Toast;
 
 import android.os.Bundle;
 
-import tkuo.sportsmate.R;
+import java.io.Serializable;
 
-public class MainActivity extends AppCompatActivity {
+import tkuo.sportsmate.R;
+import tkuo.sportsmate.model.User;
+import tkuo.sportsmate.sql.DatabaseHelper;
+import tkuo.sportsmate.utility.InputValidation;
+
+public class MainActivity extends AppCompatActivity implements Serializable {
 
 
     private NavigationView navigationView;
@@ -29,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private RecyclerView postList;
     private Toolbar mToolbar;
+    private User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initViews();
+        initObjects();
 
     }
 
@@ -69,6 +76,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void initObjects() {
+        //databaseHelper = new DatabaseHelper(activity);
+
+        //user = new User();
+        Intent i = getIntent();
+        currentUser = (User) i.getSerializableExtra("current_user_obj"); // Get the user object passed from register activity
+    }
+
 
 
 
@@ -76,10 +91,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        int currentUser = 0; // for testing
 
         // Check if user is authorized or not. If not, send it to login page
-        if(currentUser == 0) {
+        if(currentUser == null) {
             sendUserToLoginActivity();
         }
         /*
@@ -134,7 +148,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.nav_logout:
-                Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show();
+                sendUserToLoginActivity();
                 break;
         }
     }

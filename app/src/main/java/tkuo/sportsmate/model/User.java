@@ -1,6 +1,7 @@
 package tkuo.sportsmate.model;
+import java.io.Serializable;
 
-public class User {
+public class User implements Serializable {
 
     private int id;
     private String username;

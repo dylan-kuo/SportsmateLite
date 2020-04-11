@@ -5,7 +5,9 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +24,8 @@ import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+
+import java.io.Serializable;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -30,7 +34,8 @@ import tkuo.sportsmate.model.User;
 import tkuo.sportsmate.sql.DatabaseHelper;
 import tkuo.sportsmate.utility.InputValidation;
 
-public class SetupActivity extends AppCompatActivity implements View.OnClickListener {
+
+public class SetupActivity extends AppCompatActivity implements Serializable, View.OnClickListener {
 
     private final AppCompatActivity activity = SetupActivity.this;
     private EditText firstName, lastName;
@@ -38,12 +43,14 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     private Button saveInformationButton;
     private CircleImageView profileImage;
     private ProgressDialog loadingBar;
+    private RadioButton radioButton;
 
     final static int GALLERY_PICK = 1;
 
+    private InputValidation inputValidation;
     private DatabaseHelper databaseHelper;
     private User user;
-    private String currentUserName;
+    //private String currentUserName;
 
 
     @Override
@@ -62,8 +69,9 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         */
 
         initViews();
-        initListeners();
         initObjects();
+        initListeners();
+
 
         /*
         // Place the image in the circleImageView
@@ -101,6 +109,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         saveInformationButton = (Button) findViewById(R.id.setup_information_button);
         profileImage = (CircleImageView) findViewById(R.id.setup_profile_image);
         loadingBar = new ProgressDialog(this);
+
     }
 
     /**
@@ -116,11 +125,12 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
      */
     private void initObjects() {
         databaseHelper = new DatabaseHelper(activity);
-        user = new User();
-        // Get the current user's username from last activity (RegisterActivity)
-        currentUserName = getIntent().getStringExtra("current_userName");
-        Toast.makeText(this, currentUserName, Toast.LENGTH_SHORT).show();
-
+        inputValidation = new InputValidation(activity);
+        //user = new User();
+        Intent i = getIntent();
+        user = (User) i.getSerializableExtra("current_user_obj"); // Get the user object passed from register activity
+        //currentUserName = getIntent().getStringExtra("current_userName"); // Get the current user's username from last activity (RegisterActivity)
+        Toast.makeText(this, user.getUsername(), Toast.LENGTH_SHORT).show();
     }
 
 
@@ -135,6 +145,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
 
             case R.id.setup_information_button:
                 saveAccountSetupInformation();
+                sendUserToMainActivity();
                 break;
 
             case R.id.setup_profile_image:
@@ -228,53 +239,42 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
 
     private void saveAccountSetupInformation() {
 
-        // Get the selected radio button
+        // Get the selected radio button (male/female)
         int radioButtonID = gender.getCheckedRadioButtonId();
-        RadioButton radioButton = (RadioButton) gender.findViewById(radioButtonID);
-        String gender = radioButton.getText().toString();
+        radioButton = (RadioButton) gender.findViewById(radioButtonID);
 
-        // Get the typed username and full name
-        String firstname = firstName.getText().toString();
-        String lastname = lastName.getText().toString();
-
-        if(TextUtils.isEmpty(firstname)) {
-            Toast.makeText(this, "Please enter your username...", Toast.LENGTH_SHORT).show();
+        // Check if first name is empty
+        if(!inputValidation.isEditTextFilled(firstName)) {
+            Toast.makeText(this, "First name cannot be empty...", Toast.LENGTH_SHORT).show();
+            return;
         }
-        if(TextUtils.isEmpty(lastname)) {
+
+        // Check if first name format is valid
+        if (!inputValidation.isEditTextValid(firstName)) {
+            Toast.makeText(this, "Please enter valid first password...", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // CHeck if last name is empty
+        if(!inputValidation.isEditTextFilled(lastName)) {
             Toast.makeText(this, "Please enter your full name...", Toast.LENGTH_SHORT).show();
+            return;
         }
-        if(TextUtils.isEmpty(gender)) {
+        // Check if last name format is valid
+        if (!inputValidation.isEditTextValid(lastName)) {
+            Toast.makeText(this, "Please enter valid last password...", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // Check if radio button is empty
+        if (!inputValidation.isRadioButtonFilled(radioButton)) {
             Toast.makeText(this, "Please Select your gender...", Toast.LENGTH_SHORT).show();
+            return;
         }
-        else {
-            loadingBar.setTitle("Saving Information");
-            loadingBar.setMessage("Please wait, while we are creating your new account...");
-            loadingBar.show();
-            loadingBar.setCanceledOnTouchOutside(true);
-
-            /*
-            HashMap userMap = new HashMap();
-            userMap.put("user_first_name", firstname);
-            userMap.put("user_last_name", lastname);
-            userMap.put("gender", gender);
-            userMap.put("status", "Hey there, I am using Sportsmate to find a game to join!");
-            userMap.put("team", "none");
-            UsersRef.updateChildren(userMap).addOnCompleteListener(new OnCompleteListener() {
-                @Override
-                public void onComplete(@NonNull Task task) {
-                    if(task.isSuccessful()) {
-                        // startActivity(new Intent(getApplicationContext(),MainActivity.class));    // This works the same as senUserToMainActivity()
-                        sendUserToMainActivity();
-                        Toast.makeText(SetupActivity.this, "Your account is created successfully.", Toast.LENGTH_LONG).show();
-                        loadingBar.dismiss();
-                    }
-                    else {
-                        String message = task.getException().getMessage();
-                        Toast.makeText(SetupActivity.this, "Error occurred:" + message, Toast.LENGTH_SHORT).show();
-                        loadingBar.dismiss();
-                    }
-                }
-            }); */
+        else {  // If every thing is fine, add new user to SQLite db
+            user.setFirstName(firstName.getText().toString().trim());
+            user.setLastName(lastName.getText().toString().trim());
+            user.setGender(radioButton.getText().toString().trim());
+            databaseHelper.addUser(user);
+            Toast.makeText(this, "Welcome to Sportsmate!  " + user.getFirstName(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -282,6 +282,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     private void sendUserToMainActivity() {
         Intent mainIntent = new Intent(SetupActivity.this, MainActivity.class);
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);  // Do this to prevent user from going back to Register activity unless clicking logout
+        mainIntent.putExtra("current_user_obj", user);  // Pass user object to main activity
         startActivity(mainIntent);
         finish();
     }

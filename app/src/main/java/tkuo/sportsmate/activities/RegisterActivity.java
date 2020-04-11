@@ -4,6 +4,8 @@ package tkuo.sportsmate.activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+
+import android.os.Parcelable;
 import android.renderscript.ScriptGroup;
 import android.text.TextUtils;
 import android.view.View;
@@ -15,6 +17,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.Serializable;
+
 import tkuo.sportsmate.R;
 import tkuo.sportsmate.utility.InputValidation;
 import tkuo.sportsmate.sql.DatabaseHelper;
@@ -22,7 +26,7 @@ import tkuo.sportsmate.model.User;
 
 
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity implements Serializable {
 
     private final AppCompatActivity activity = RegisterActivity.this;
 
@@ -117,7 +121,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
         // Check if confirm password format is valid
         if (!inputValidation.isEditTextValid(userConfirmPassword)) {
-            Toast.makeText(this, "Please enter confirm password...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please enter valid confirm password...", Toast.LENGTH_SHORT).show();
             return;
         }
         // Check if confirm password matches password
@@ -131,11 +135,13 @@ public class RegisterActivity extends AppCompatActivity {
             user.setUsername(userName.getText().toString().trim());
             user.setPassword(userPassword.getText().toString().trim());
 
-            databaseHelper.addUser(user);
-            String currentUserName = user.getUsername();
+            //databaseHelper.addUser(user);  // Create user instance to Sqlite based on only username and password
+
             emptyInputEditText();
 
-            sendUserToSetupActivity(currentUserName);  // Pass the current username to next activity
+            sendUserToSetupActivity(user);  // This will pass User object to setup activity to finish filling in all data for the user instance in SQLite db
+            //String currentUserName = user.getUsername();
+            //sendUserToSetupActivity(currentUserName);  // Pass the current username to next activity
         }
         else {
             Toast.makeText(this, "Username already exists...", Toast.LENGTH_SHORT).show();
@@ -143,6 +149,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     /**
+     *
      * This method is to switch the user to setup activity
      */
     private void sendUserToSetupActivity() {
@@ -154,13 +161,27 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     /**
-     * This method is to switch annd pass the current user's username to setup activity
+     * NOTE: If you are going to pass user to setup intent by username, use this method
+     * This method is to switch and pass the current user's username to setup activity
      * @param currentUserName
      */
     private void sendUserToSetupActivity(String currentUserName) {
 
         Intent setupIntent = new Intent(RegisterActivity.this, SetupActivity.class);
         setupIntent.putExtra("current_userName", currentUserName);
+        startActivity(setupIntent);
+        finish();
+    }
+
+    /**
+     * NOTE: I use this method because it passes the User object to setup intent which is more convenient to fill in data in db
+     * This method is to switch and pass the current User class object (user) to setup activity
+     * @param currentUserObj
+     */
+    private void sendUserToSetupActivity(User currentUserObj) {
+
+        Intent setupIntent = new Intent(RegisterActivity.this, SetupActivity.class);
+        setupIntent.putExtra("current_user_obj", currentUserObj);
         startActivity(setupIntent);
         finish();
     }
@@ -181,6 +202,4 @@ public class RegisterActivity extends AppCompatActivity {
         userPassword.setText(null);
         userConfirmPassword.setText(null);
     }
-
-
 }
