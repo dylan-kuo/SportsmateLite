@@ -12,7 +12,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+
+import java.util.List;
+
 import tkuo.sportsmate.R;
+import tkuo.sportsmate.model.User;
 import tkuo.sportsmate.utility.InputValidation;
 import tkuo.sportsmate.sql.DatabaseHelper;
 
@@ -110,8 +114,8 @@ public class LoginActivity extends AppCompatActivity {
         // Validate the user
         if (databaseHelper.checkUser(userName.getText().toString().trim(),
                 userPassword.getText().toString().trim())) {
-            emptyInputEditText();
             sendUserToMainActivity();
+            emptyInputEditText();
         } else {
             Toast.makeText(this, "Wrong Username or Password...", Toast.LENGTH_SHORT).show();
         }
@@ -159,6 +163,11 @@ public class LoginActivity extends AppCompatActivity {
     private void sendUserToMainActivity() {
         Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);  // Do this to prevent user from going back to login activity unless clicking logout
+
+        String username = userName.getText().toString().trim();
+        User user = databaseHelper.getSingleUser(username).get(0);
+        mainIntent.putExtra("current_user_obj", user);  // Pass user object to main activity
+
         startActivity(mainIntent);
         finish();
     }

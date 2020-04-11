@@ -85,6 +85,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+
     /**
      * This method is to fetch all user and return the list of user records
      *
@@ -140,6 +141,67 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return userList;
     }
 
+
+    /**
+     * This method is to fetch the user info and return the all the user records
+     *
+     * @return list
+     */
+    public List<User> getSingleUser(String username) {
+        // Array of columns to fetch
+        String[] columns = {
+                COLUMN_USER_ID,
+                COLUMN_USER_FIRST_NAME,
+                COLUMN_USER_LAST_NAME,
+                COLUMN_USER_GENDER,
+                COLUMN_USER_PASSWORD
+        };
+
+        // Selection criteria
+        String selection = COLUMN_USER_USERNAME + " = ?";
+
+        // Selection argument
+        String[] selectionArgs = {username};
+
+        List<User> userList = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Query the user table
+        /**
+         * Here query function is used to fetch records from user table this function works like we use sql query.
+         * SQL query equivalent to this query function is
+         * SELECT user_id,user_first_name,user_last_name,user_gender,user_password FROM user WHERE user_username = 'demoUsername';
+         */
+        Cursor cursor = db.query(TABLE_USER,
+                columns,          // columns to return
+                selection,    // columns for the WHERE clause
+                selectionArgs, // the values for the WHERE clause
+                null,     // group the rows
+                null,      // filter by row groups
+                null);        // the sort order
+
+        // Traversing through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                User user = new User();
+                user.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_USER_ID))));
+                user.setFirstName(cursor.getString(cursor.getColumnIndex(COLUMN_USER_FIRST_NAME)));
+                user.setLastName(cursor.getString(cursor.getColumnIndex(COLUMN_USER_LAST_NAME)));
+                user.setGender(cursor.getString(cursor.getColumnIndex(COLUMN_USER_GENDER)));
+                user.setPassword(cursor.getString(cursor.getColumnIndex(COLUMN_USER_PASSWORD)));
+                // Adding user record to list
+                userList.add(user);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+
+        // Return user list
+        return userList;
+    }
+
+
     /**
      * This method to update user record
      *
@@ -160,24 +222,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    /**
-     * This method to update user record
-     *
-     * @param user
-     */
-    public void updateUserSetup(User user) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_USER_FIRST_NAME, user.getFirstName());
-        values.put(COLUMN_USER_LAST_NAME, user.getLastName());
-        values.put(COLUMN_USER_GENDER, user.getGender());
-
-        // Updating row
-        db.update(TABLE_USER, values, COLUMN_USER_USERNAME + " = ? ",
-                new String[]{user.getUsername()});
-        db.close();
-    }
 
     /**
      * This method is to delete user record

@@ -135,13 +135,9 @@ public class RegisterActivity extends AppCompatActivity implements Serializable 
             user.setUsername(userName.getText().toString().trim());
             user.setPassword(userPassword.getText().toString().trim());
 
-            //databaseHelper.addUser(user);  // Create user instance to Sqlite based on only username and password
-
             emptyInputEditText();
-
             sendUserToSetupActivity(user);  // This will pass User object to setup activity to finish filling in all data for the user instance in SQLite db
-            //String currentUserName = user.getUsername();
-            //sendUserToSetupActivity(currentUserName);  // Pass the current username to next activity
+
         }
         else {
             Toast.makeText(this, "Username already exists...", Toast.LENGTH_SHORT).show();
@@ -156,19 +152,6 @@ public class RegisterActivity extends AppCompatActivity implements Serializable 
 
         Intent setupIntent = new Intent(RegisterActivity.this, SetupActivity.class);
         setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(setupIntent);
-        finish();
-    }
-
-    /**
-     * NOTE: If you are going to pass user to setup intent by username, use this method
-     * This method is to switch and pass the current user's username to setup activity
-     * @param currentUserName
-     */
-    private void sendUserToSetupActivity(String currentUserName) {
-
-        Intent setupIntent = new Intent(RegisterActivity.this, SetupActivity.class);
-        setupIntent.putExtra("current_userName", currentUserName);
         startActivity(setupIntent);
         finish();
     }

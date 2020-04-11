@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.navigation.NavigationView;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -17,24 +16,22 @@ import android.view.View;
 import android.widget.Toast;
 
 
-import android.os.Bundle;
-
-import java.io.Serializable;
-
 import tkuo.sportsmate.R;
 import tkuo.sportsmate.model.User;
 import tkuo.sportsmate.sql.DatabaseHelper;
 import tkuo.sportsmate.utility.InputValidation;
 
-public class MainActivity extends AppCompatActivity implements Serializable {
+public class MainActivity extends AppCompatActivity  {
 
-
+    private final AppCompatActivity activity = MainActivity.this;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private RecyclerView postList;
     private Toolbar mToolbar;
-    private User currentUser;
+    private User user;
+    private String currentUserName;
+    private DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,14 +74,12 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     }
 
     private void initObjects() {
-        //databaseHelper = new DatabaseHelper(activity);
+        databaseHelper = new DatabaseHelper(activity);
 
-        //user = new User();
+        // Received the user object from either setup activity (after user finishes setup) or login activity (User finishes login)
         Intent i = getIntent();
-        currentUser = (User) i.getSerializableExtra("current_user_obj"); // Get the user object passed from register activity
+        user = (User) i.getSerializableExtra("current_user_obj"); // Get the user object passed from register activity
     }
-
-
 
 
     @Override
@@ -93,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 
         // Check if user is authorized or not. If not, send it to login page
-        if(currentUser == null) {
+        if(user == null) {
             sendUserToLoginActivity();
         }
         /*
@@ -101,7 +96,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             checkUserExistence();
         }*/
     }
-
 
 
     // Switch to Login Activity and clear any other activities on top of it

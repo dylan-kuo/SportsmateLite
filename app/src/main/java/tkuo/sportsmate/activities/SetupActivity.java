@@ -126,11 +126,9 @@ public class SetupActivity extends AppCompatActivity implements Serializable, Vi
     private void initObjects() {
         databaseHelper = new DatabaseHelper(activity);
         inputValidation = new InputValidation(activity);
-        //user = new User();
+
         Intent i = getIntent();
         user = (User) i.getSerializableExtra("current_user_obj"); // Get the user object passed from register activity
-        //currentUserName = getIntent().getStringExtra("current_userName"); // Get the current user's username from last activity (RegisterActivity)
-        Toast.makeText(this, user.getUsername(), Toast.LENGTH_SHORT).show();
     }
 
 
@@ -282,7 +280,10 @@ public class SetupActivity extends AppCompatActivity implements Serializable, Vi
     private void sendUserToMainActivity() {
         Intent mainIntent = new Intent(SetupActivity.this, MainActivity.class);
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);  // Do this to prevent user from going back to Register activity unless clicking logout
+
         mainIntent.putExtra("current_user_obj", user);  // Pass user object to main activity
+        //mainIntent.putExtra("current_userName", user.getUsername()); // Pass username instead
+
         startActivity(mainIntent);
         finish();
     }
