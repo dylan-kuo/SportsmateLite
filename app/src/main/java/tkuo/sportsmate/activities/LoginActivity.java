@@ -169,6 +169,7 @@ public class LoginActivity extends AppCompatActivity {
         mainIntent.putExtra("current_user_obj", user);  // Pass user object to main activity
 
         startActivity(mainIntent);
+        Toast.makeText(this, "Welcome back ~  " + user.getFirstName(), Toast.LENGTH_SHORT).show();
         finish();
     }
 

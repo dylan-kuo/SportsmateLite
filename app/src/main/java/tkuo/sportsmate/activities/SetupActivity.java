@@ -272,7 +272,7 @@ public class SetupActivity extends AppCompatActivity implements Serializable, Vi
             user.setLastName(lastName.getText().toString().trim());
             user.setGender(radioButton.getText().toString().trim());
             databaseHelper.addUser(user);
-            Toast.makeText(this, "Welcome to Sportsmate!  " + user.getFirstName(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Welcome ~  " + user.getFirstName(), Toast.LENGTH_SHORT).show();
         }
     }
 

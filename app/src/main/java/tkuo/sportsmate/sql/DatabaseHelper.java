@@ -144,7 +144,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * This method is to fetch the user info and return the all the user records
-     *
+     * @param username
      * @return list
      */
     public List<User> getSingleUser(String username) {

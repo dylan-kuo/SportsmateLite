@@ -135,7 +135,7 @@ public class RegisterActivity extends AppCompatActivity implements Serializable 
             user.setUsername(userName.getText().toString().trim());
             user.setPassword(userPassword.getText().toString().trim());
 
-            emptyInputEditText();
+            //emptyInputEditText();
             sendUserToSetupActivity(user);  // This will pass User object to setup activity to finish filling in all data for the user instance in SQLite db
 
         }
