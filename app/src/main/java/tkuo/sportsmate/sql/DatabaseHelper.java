@@ -29,12 +29,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_USER_GENDER = "user_gender";
     private static final String COLUMN_USER_USERNAME = "user_username";
     private static final String COLUMN_USER_PASSWORD = "user_password";
+    private static final String COLUMN_USER_IMAGE_URI = "user_image_uri";
 
     // Create table sql query
     private String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
             + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_USER_FIRST_NAME
             + " TEXT," + COLUMN_USER_LAST_NAME + " TEXT," + COLUMN_USER_GENDER + " TEXT," +
-            COLUMN_USER_USERNAME + " TEXT," + COLUMN_USER_PASSWORD + " TEXT" + ")";
+            COLUMN_USER_USERNAME + " TEXT," + COLUMN_USER_PASSWORD + " TEXT," + COLUMN_USER_IMAGE_URI
+            + " TEXT" + ")";
 
     // Drop table sql query
     private String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_USER;
@@ -79,6 +81,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_USER_GENDER, user.getGender());
         values.put(COLUMN_USER_USERNAME, user.getUsername());
         values.put(COLUMN_USER_PASSWORD, user.getPassword());
+        values.put(COLUMN_USER_IMAGE_URI, user.getImageUri());
 
         // Inserting Row
         db.insert(TABLE_USER, null, values);
@@ -98,7 +101,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_USER_FIRST_NAME,
                 COLUMN_USER_LAST_NAME,
                 COLUMN_USER_GENDER,
-                COLUMN_USER_PASSWORD
+                COLUMN_USER_PASSWORD,
+                COLUMN_USER_IMAGE_URI,
         };
         // Sorting orders
         String sortOrder =
@@ -130,6 +134,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 user.setLastName(cursor.getString(cursor.getColumnIndex(COLUMN_USER_LAST_NAME)));
                 user.setGender(cursor.getString(cursor.getColumnIndex(COLUMN_USER_GENDER)));
                 user.setPassword(cursor.getString(cursor.getColumnIndex(COLUMN_USER_PASSWORD)));
+                user.setImageUri(cursor.getString(cursor.getColumnIndex(COLUMN_USER_IMAGE_URI)));
                 // Adding user record to list
                 userList.add(user);
             } while (cursor.moveToNext());
@@ -154,7 +159,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_USER_FIRST_NAME,
                 COLUMN_USER_LAST_NAME,
                 COLUMN_USER_GENDER,
-                COLUMN_USER_PASSWORD
+                COLUMN_USER_PASSWORD,
+                COLUMN_USER_IMAGE_URI
         };
 
         // Selection criteria
@@ -190,6 +196,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 user.setLastName(cursor.getString(cursor.getColumnIndex(COLUMN_USER_LAST_NAME)));
                 user.setGender(cursor.getString(cursor.getColumnIndex(COLUMN_USER_GENDER)));
                 user.setPassword(cursor.getString(cursor.getColumnIndex(COLUMN_USER_PASSWORD)));
+                user.setImageUri(cursor.getString(cursor.getColumnIndex(COLUMN_USER_IMAGE_URI)));
                 // Adding user record to list
                 userList.add(user);
             } while (cursor.moveToNext());
@@ -215,6 +222,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_USER_LAST_NAME, user.getLastName());
         values.put(COLUMN_USER_GENDER, user.getGender());
         values.put(COLUMN_USER_PASSWORD, user.getPassword());
+        values.put(COLUMN_USER_IMAGE_URI, user.getImageUri());
 
         // Updating row
         db.update(TABLE_USER, values, COLUMN_USER_ID + " = ?",

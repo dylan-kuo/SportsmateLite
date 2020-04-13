@@ -1,5 +1,8 @@
 package tkuo.sportsmate.model;
+import android.net.Uri;
+
 import java.io.Serializable;
+
 
 public class User implements Serializable {
 
@@ -8,8 +11,9 @@ public class User implements Serializable {
     private String password;
     private String firstName;
     private String lastName;
-
     private String gender;
+    private String imageUri;
+    private Uri imageUriObj;
 
     public int getId() {
         return id;
@@ -59,6 +63,11 @@ public class User implements Serializable {
         this.gender = gender;
     }
 
+    public String getImageUri() {
+        return imageUri;
+    }
 
-
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
+    }
 }

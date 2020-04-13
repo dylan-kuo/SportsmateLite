@@ -3,14 +3,18 @@ package tkuo.sportsmate.activities;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -45,12 +49,14 @@ public class SetupActivity extends AppCompatActivity implements Serializable, Vi
     private ProgressDialog loadingBar;
     private RadioButton radioButton;
 
-    final static int GALLERY_PICK = 1;
+    final static int IMAGE_PICKER = 1;
 
     private InputValidation inputValidation;
     private DatabaseHelper databaseHelper;
     private User user;
     //private String currentUserName;
+
+    private String UsersRef;
 
 
     @Override
@@ -67,10 +73,11 @@ public class SetupActivity extends AppCompatActivity implements Serializable, Vi
         UsersRef = FirebaseDatabase.getInstance().getReference().child(currentUserID);
         UserProfileImageRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
         */
-
         initViews();
         initObjects();
         initListeners();
+
+
 
 
         /*
@@ -96,7 +103,9 @@ public class SetupActivity extends AppCompatActivity implements Serializable, Vi
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });  */
+        });
+        */
+
     }
 
     /**
@@ -143,15 +152,27 @@ public class SetupActivity extends AppCompatActivity implements Serializable, Vi
 
             case R.id.setup_information_button:
                 saveAccountSetupInformation();
-                sendUserToMainActivity();
                 break;
 
             case R.id.setup_profile_image:
-                Intent galleryIntent = new Intent();
-                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-                galleryIntent.setType("image/*");
-                startActivityForResult(galleryIntent, GALLERY_PICK);
-                break;
+
+                Intent getImageIntent = new Intent(Intent.ACTION_PICK);
+                getImageIntent.setType("image/*");
+                startActivityForResult(getImageIntent, IMAGE_PICKER);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == IMAGE_PICKER && resultCode == RESULT_OK && null != data) {
+
+            Uri fullPhotoUri = data.getData();
+            profileImage.setImageURI(fullPhotoUri);
+
+            user.setImageUri(fullPhotoUri.toString());
+            //String realUri = getRealPathFromURI(fullPhotoUri);
         }
     }
 
@@ -234,7 +255,10 @@ public class SetupActivity extends AppCompatActivity implements Serializable, Vi
     }
     */
 
-
+    /**
+     * This method check if the input is valid and create a new instance to user table, then switch to main activity
+     *
+     */
     private void saveAccountSetupInformation() {
 
         // Get the selected radio button (male/female)
@@ -248,43 +272,62 @@ public class SetupActivity extends AppCompatActivity implements Serializable, Vi
         }
 
         // Check if first name format is valid
-        if (!inputValidation.isEditTextValid(firstName)) {
+        else if (!inputValidation.isEditTextValid(firstName)) {
             Toast.makeText(this, "Please enter valid first password...", Toast.LENGTH_SHORT).show();
             return;
         }
         // CHeck if last name is empty
-        if(!inputValidation.isEditTextFilled(lastName)) {
-            Toast.makeText(this, "Please enter your full name...", Toast.LENGTH_SHORT).show();
+        else if(!inputValidation.isEditTextFilled(lastName)) {
+            Toast.makeText(this, "Please enter your last name...", Toast.LENGTH_SHORT).show();
             return;
         }
         // Check if last name format is valid
-        if (!inputValidation.isEditTextValid(lastName)) {
+        else if (!inputValidation.isEditTextValid(lastName)) {
             Toast.makeText(this, "Please enter valid last password...", Toast.LENGTH_SHORT).show();
             return;
         }
         // Check if radio button is empty
-        if (!inputValidation.isRadioButtonFilled(radioButton)) {
+        else if (gender.getCheckedRadioButtonId() == -1) {
             Toast.makeText(this, "Please Select your gender...", Toast.LENGTH_SHORT).show();
-            return;
         }
+
         else {  // If every thing is fine, add new user to SQLite db
             user.setFirstName(firstName.getText().toString().trim());
             user.setLastName(lastName.getText().toString().trim());
             user.setGender(radioButton.getText().toString().trim());
             databaseHelper.addUser(user);
-            Toast.makeText(this, "Welcome ~  " + user.getFirstName(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Welcome " + user.getFirstName(), Toast.LENGTH_SHORT).show();
+            sendUserToMainActivity();
         }
     }
 
+    /**
+     * Pass the user object to main activity
+     */
     // Switch to Main Activity and clear any other activities on top of it
     private void sendUserToMainActivity() {
         Intent mainIntent = new Intent(SetupActivity.this, MainActivity.class);
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);  // Do this to prevent user from going back to Register activity unless clicking logout
 
         mainIntent.putExtra("current_user_obj", user);  // Pass user object to main activity
-        //mainIntent.putExtra("current_userName", user.getUsername()); // Pass username instead
-
         startActivity(mainIntent);
         finish();
+    }
+
+    /**
+     * This method returns the real URI (path) in android (no need for use)
+     */
+    private String getRealPathFromURI(Uri contentURI) {
+        String result;
+        Cursor cursor = getContentResolver().query(contentURI, null, null, null, null);
+        if (cursor == null) { // Source is Dropbox or other similar local file path
+            result = contentURI.getPath();
+        } else {
+            cursor.moveToFirst();
+            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            result = cursor.getString(idx);
+            cursor.close();
+        }
+        return result;
     }
 }

@@ -31,5 +31,4 @@
         android:textColor="@android:color/background_light"
         android:textSize="16dp" />
 
-
 </RelativeLayout>

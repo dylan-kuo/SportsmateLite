@@ -7,19 +7,21 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
-
+import de.hdodenhof.circleimageview.CircleImageView;
 import tkuo.sportsmate.R;
 import tkuo.sportsmate.model.User;
 import tkuo.sportsmate.sql.DatabaseHelper;
-import tkuo.sportsmate.utility.InputValidation;
+
 
 public class MainActivity extends AppCompatActivity  {
 
@@ -28,9 +30,10 @@ public class MainActivity extends AppCompatActivity  {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private RecyclerView postList;
+    private CircleImageView headerProfileImage;
+    private TextView name;
     private Toolbar mToolbar;
     private User user;
-    private String currentUserName;
     private DatabaseHelper databaseHelper;
 
     @Override
@@ -43,12 +46,14 @@ public class MainActivity extends AppCompatActivity  {
 
     }
 
+    /**
+     * This method is to initialize views
+     */
     private void initViews() {
         // Set up main page toolbar
         mToolbar = (Toolbar) findViewById((R.id.main_page_toolbar));
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Home");
-
 
         // Set up the toggle navigation
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -71,8 +76,18 @@ public class MainActivity extends AppCompatActivity  {
                 return false;
             }
         });
+
+        // Set up image on the navigation header
+        headerProfileImage = navView.findViewById(R.id.img_logo);
+
+        // Set up user's name on the navigation header
+        name = navView.findViewById(R.id.nav_user_first_name);
+
     }
 
+    /**
+     * This method is to initialize objects to be used
+     */
     private void initObjects() {
         databaseHelper = new DatabaseHelper(activity);
 
@@ -91,14 +106,17 @@ public class MainActivity extends AppCompatActivity  {
         if(user == null) {
             sendUserToLoginActivity();
         }
-        /*
+
         else {
-            checkUserExistence();
-        }*/
+            Glide.with(this).load(user.getImageUri()).into(headerProfileImage); // Set navigation header picture
+            name.setText(user.getFirstName()+ " " + user.getLastName()); // set navigation header user's name
+        }
     }
 
-
-    // Switch to Login Activity and clear any other activities on top of it
+    /**
+     * This method is to switch to Login Activity and clear any other activities on top of it
+     *
+     */
     private void sendUserToLoginActivity() {
         Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
         loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -107,7 +125,12 @@ public class MainActivity extends AppCompatActivity  {
     }
 
 
-    // Set up hamburger menu connection to toggle navigation
+    /**
+     * This method is used for selected options of drawer navigation
+     *
+     * @param item
+     * @return true/false
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
@@ -118,7 +141,11 @@ public class MainActivity extends AppCompatActivity  {
     }
 
 
-    // Temporary toast message to test each menu item
+    /**
+     * This method is to temporarily send toast message to test each menu item
+     *
+     * @param item
+     */
     private void UserMenuSelector(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_profile:

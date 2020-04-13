@@ -87,12 +87,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        // ******** set mAuth here **********
-        /*
-        Object currentUser = null; // testing
-        if(currentUser != null) {
-            sendUserToMainActivity();
-        } */
     }
 
     /**
@@ -120,42 +114,7 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this, "Wrong Username or Password...", Toast.LENGTH_SHORT).show();
         }
     }
-    /*   **************   OLD CODE   *******************************
-    private void allowUserToLogin() {
-        String username = userName.getText().toString();
-        String password = userPassword.getText().toString();
 
-        if (TextUtils.isEmpty(username)) {
-            Toast.makeText(this, "Please enter your username...", Toast.LENGTH_SHORT).show();
-        }
-        else if (TextUtils.isEmpty(password)) {
-            Toast.makeText(this, "Please enter your password...", Toast.LENGTH_SHORT).show();
-        }
-        else {
-            loadingBar.setTitle("Login");
-            loadingBar.setMessage("Please wait, while we are allowing you to login into your Account...");
-            loadingBar.show();
-            loadingBar.setCanceledOnTouchOutside(true);
-
-            mAuth.signInWithEmailAndPassword(username, password)
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful()) {
-                                sendUserToMainActivity();
-
-                                Toast.makeText(LoginActivity.this, "Logged In Successfully",Toast.LENGTH_SHORT).show();
-                                loadingBar.dismiss();
-                            } else {
-                                String message = task.getException().getMessage();
-                                Toast.makeText(LoginActivity.this, "Error occurred:" + message, Toast.LENGTH_SHORT).show();
-                                loadingBar.dismiss();
-                            }
-                        }
-                    });
-        }
-
-    } **********************************************************************  */
 
     /**
      * This method is to switch the user to main activity
@@ -169,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
         mainIntent.putExtra("current_user_obj", user);  // Pass user object to main activity
 
         startActivity(mainIntent);
-        Toast.makeText(this, "Welcome back ~  " + user.getFirstName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Welcome back " + user.getFirstName(), Toast.LENGTH_SHORT).show();
         finish();
     }
 
