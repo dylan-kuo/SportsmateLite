@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.ChooseMatchActivity">
+
+    <ImageView
+        android:id="@+id/img_ball"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="75dp"
+        android:contentDescription="@string/todo"
+        app:srcCompat="@drawable/basketball"
+        tools:layout_editor_absoluteX="138dp"
+        tools:layout_editor_absoluteY="44dp" />
+
+    <Button
+        android:id="@+id/choose_personal_match"
+        android:layout_width="200dp"
+        android:layout_height="80dp"
+        android:layout_below="@id/choose_team_match"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/button"
+        android:text="@string/personal_match"
+        android:textColor="@color/colorAccent" />
+
+    <Button
+        android:id="@+id/choose_team_match"
+        android:layout_width="200dp"
+        android:layout_height="80dp"
+        android:layout_below="@id/img_ball"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/button"
+        android:text="@string/team_match"
+        android:textColor="@color/colorAccent" />
+</RelativeLayout>

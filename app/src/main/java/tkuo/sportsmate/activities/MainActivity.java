@@ -148,6 +148,10 @@ public class MainActivity extends AppCompatActivity  {
      */
     private void UserMenuSelector(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.nav_create_match:
+                sendUserToCreateMatchActivity();
+                break;
+
             case R.id.nav_profile:
                 Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show();
                 break;
@@ -173,5 +177,18 @@ public class MainActivity extends AppCompatActivity  {
                 sendUserToLoginActivity();
                 break;
         }
+    }
+
+
+
+    /**
+     * This method is to switch to CreateMatchActivity
+     *
+     */
+    private void sendUserToCreateMatchActivity() {
+        Intent createMatchIntent = new Intent(MainActivity.this, ChooseMatchActivity.class);
+        //createMatchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(createMatchIntent);
+        //finish();
     }
 }

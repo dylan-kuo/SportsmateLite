@@ -10,6 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activities.LoginActivity" />
+        <activity android:name=".activities.ChooseMatchActivity" />
         <activity android:name=".activities.RegisterActivity" />
         <activity android:name=".activities.SetupActivity" />
         <activity android:name=".activities.MainActivity">
