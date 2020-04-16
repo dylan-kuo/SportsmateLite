@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activities.CreatePersonalMatchActivity" />
         <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.ChooseMatchActivity" />
         <activity android:name=".activities.RegisterActivity" />
@@ -23,3 +24,4 @@
     </application>
 
 </manifest>
+

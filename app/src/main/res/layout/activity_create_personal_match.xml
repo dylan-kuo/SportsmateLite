@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentTop="true"
+    android:background="@color/backgroundColor"
+    tools:context=".activities.CreatePersonalMatchActivity">
+
+    <ImageView
+        android:id="@+id/img_ball"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:contentDescription="@string/todo"
+        app:srcCompat="@drawable/basketball"
+        tools:layout_editor_absoluteX="138dp"
+        tools:layout_editor_absoluteY="44dp" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/img_ball"
+        android:layout_marginTop="20dp"
+        android:text="@string/create_personal_match"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1" >
+
+        <TextView
+            android:id="@+id/TextViewLocation"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="15dp"
+            android:text="@string/location" />
+
+        <Spinner
+            android:id="@+id/create_personal_match_location"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_below="@id/create_personal_match_end_time"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/input"
+            android:padding="4dp"
+            android:scrollbarSize="4dp" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1" >
+
+        <TextView
+            android:id="@+id/TextViewDate"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="15dp"
+            android:text="@string/date" />
+
+        <TextView
+            android:id="@+id/create_personal_match_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/create_personal_match_location"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/input"
+            android:ems="10"
+            android:hint="@string/date_of_game"
+            android:importantForAutofill="no"
+            android:inputType="date"
+            android:padding="10dp"
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1" >
+
+        <TextView
+            android:id="@+id/TextViewStartTime"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="15dp"
+            android:text="@string/start_time" />
+
+        <TextView
+            android:id="@+id/create_personal_match_start_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/create_personal_match_date"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/input"
+            android:ems="10"
+            android:hint="@string/start_at"
+            android:importantForAutofill="no"
+            android:inputType="datetime|time"
+            android:padding="10dp"
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1" >
+
+        <TextView
+            android:id="@+id/TextViewEndTime"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="15dp"
+            android:text="@string/end_time" />
+
+        <TextView
+            android:id="@+id/create_personal_match_end_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/create_personal_match_start_time"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/input"
+            android:ems="10"
+            android:hint="@string/end_at"
+            android:importantForAutofill="no"
+            android:inputType="datetime|time"
+            android:padding="10dp"
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1" >
+
+        <TextView
+            android:id="@+id/TextViewType"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="15dp"
+            android:text="@string/game_type" />
+
+        <Spinner
+            android:id="@+id/create_personal_match_type"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_below="@id/create_personal_match_end_time"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/input"
+            android:padding="4dp"
+            android:scrollbarSize="4dp" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1" >
+
+        <TextView
+            android:id="@+id/TextViewInitPlayerNumber"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:text="@string/number_of_initial_player"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/create_personal_match_init_player_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/create_personal_match_type"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/input"
+            android:ems="10"
+            android:hint="@string/number_of_initial_player"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:padding="10dp"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/create_personal_match_create"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/create_personal_match_init_player_number"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="60dp"
+        android:background="@drawable/button"
+        android:padding="15dp"
+        android:text="@string/create"
+        android:textColor="@color/colorAccent"
+        android:textSize="20sp" />
+
+</TableLayout>

@@ -8,5 +8,32 @@
     <string name="drawer_open">Drawer Open</string>"
     <string name="drawer_close">Drawer Close</string>"
     <string name="todo">TODO</string>
+    <string name="location">Location</string>
+    <string name="date_of_game">Date</string>
+    <string name="start_at">Start time</string>
+    <string name="end_at">End time</string>
+    <string name="number_of_initial_player">Number of Initial Player</string>
+    <string name="create_personal_match">Create Personal Match</string>
+    <string name="create">Create</string>
+    <string name="date">Date</string>
+    <string name="start_time">Start Time</string>
+    <string name="end_time">End Time</string>
+    <string name="game_type">Game Type</string>
+    <string-array name="personal_match_type_array">
+        <item>1 on 1</item>
+        <item>2 on 2</item>
+        <item>3 on 3</item>
+        <item>4 on 4</item>
+        <item>5 on 5</item>
+    </string-array>
+    <string-array name="basketball_court_array">
+        <item>BU FitRec</item>
+        <item>MIT Recreation</item>
+        <item>Cambridge Athletic Club</item>
+        <item>Huntington Avenue YMCA</item>
+        <item>Boston Ski and Sports Club</item>
+        <item>BSC Allston</item>
+    </string-array>
+
 </resources>
 
