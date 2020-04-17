@@ -31,6 +31,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_USER_PASSWORD = "user_password";
     private static final String COLUMN_USER_IMAGE_URI = "user_image_uri";
 
+    // personal_match table column names
+    private static final String COLUMN_PERSONAL_MATCH_ID = "pmatch_id";
+    private static final String COLUMN_PERSONAL_MATCH_PLAYER_ID = "player_id";
+    private static final String COLUMN_PERSONAL_MATCH_LOCATION = "location";
+    private static final String COLUMN_PERSONAL_MATCH_DATE = "date";
+    private static final String COLUMN_PERSONAL_MATCH_START_AT = "start_at";
+    private static final String COLUMN_PERSONAL_MATCH_END_AT = "end_at";
+    private static final String COLUMN_PERSONAL_MATCH_GAME_TYPE = "game_type";
+    private static final String COLUMN_PERSONAL_MATCH_INIT_PLAYERS= "num_initial_players";
+    private static final String COLUMN_PERSONAL_MATCH_NUM_PLAYER_JOINED = "num_players_joined";
+
+
+
     // Create table sql query
     private String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
             + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_USER_FIRST_NAME

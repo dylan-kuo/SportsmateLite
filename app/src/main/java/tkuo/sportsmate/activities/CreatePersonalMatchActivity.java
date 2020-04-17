@@ -24,8 +24,6 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.widget.Toast;
-
-
 import java.util.HashMap;
 import tkuo.sportsmate.R;
 
