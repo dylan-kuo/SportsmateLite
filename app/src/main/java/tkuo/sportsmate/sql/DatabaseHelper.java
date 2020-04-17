@@ -19,8 +19,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Database Name
     private static final String DATABASE_NAME = "UserManager.db";
 
-    // User table name
+    // table names
     private static final String TABLE_USER = "user";
+    private static final String TABLE_PERSONAL_MATCH = "personal_match";
+    private static final String TABLE_PLAYER = "player";
+    private static final String TABLE_PERSONAL_MATCH_PLAYERS = "personal_match_players";
 
     // User Table Column names
     private static final String COLUMN_USER_ID = "user_id";
@@ -39,20 +42,67 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_PERSONAL_MATCH_START_AT = "start_at";
     private static final String COLUMN_PERSONAL_MATCH_END_AT = "end_at";
     private static final String COLUMN_PERSONAL_MATCH_GAME_TYPE = "game_type";
-    private static final String COLUMN_PERSONAL_MATCH_INIT_PLAYERS= "num_initial_players";
+    private static final String COLUMN_PERSONAL_MATCH_INIT_PLAYERS = "num_initial_players";
     private static final String COLUMN_PERSONAL_MATCH_NUM_PLAYER_JOINED = "num_players_joined";
 
+    // Player Table Column names
+    private static final String COLUMN_PLAYER_PLAYER_ID = "player_id";
+    private static final String COLUMN_PLAYER_USER_ID = "user_id";
+
+    // personal_match_players Table Column names
+    private static final String COLUMN_PERSONAL_MATCH_PLAYERS_MATCH_ID = "match_id";
+    private static final String COLUMN_PERSONAL_MATCH_PLAYERS_PLAYER_ID = "p_id";
 
 
-    // Create table sql query
+    /** Create user table sql query */
     private String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
             + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_USER_FIRST_NAME
             + " TEXT," + COLUMN_USER_LAST_NAME + " TEXT," + COLUMN_USER_GENDER + " TEXT," +
             COLUMN_USER_USERNAME + " TEXT," + COLUMN_USER_PASSWORD + " TEXT," + COLUMN_USER_IMAGE_URI
             + " TEXT" + ")";
 
-    // Drop table sql query
+    /** Drop user table sql query */
     private String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_USER;
+
+
+
+    /** Create player table sql query */
+    private String CREATE_PLAYER_TABLE = "CREATE TABLE " + TABLE_PLAYER + "("
+            + COLUMN_PLAYER_PLAYER_ID + " INTEGER PRIMARY KEY," + COLUMN_PLAYER_USER_ID
+            + " INTEGER,"
+            +  " FOREIGN KEY (" + COLUMN_PLAYER_USER_ID + ") REFERENCES " + TABLE_USER + "(" + COLUMN_USER_ID + "));";
+
+    /** Drop player table sql query */
+    private String DROP_PLAYER_TABLE = "DROP TABLE IF EXISTS " + TABLE_PLAYER;
+
+
+
+    /** Create personal_match table sql query */
+    private String CREATE_PERSONAL_MATCH_TABLE = "CREATE TABLE " + TABLE_PERSONAL_MATCH + "("
+            + COLUMN_PERSONAL_MATCH_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_PERSONAL_MATCH_PLAYER_ID
+            + " INTEGER," + COLUMN_PERSONAL_MATCH_LOCATION + " TEXT," + COLUMN_PERSONAL_MATCH_DATE + " TEXT," +
+            COLUMN_PERSONAL_MATCH_START_AT + " TEXT," + COLUMN_PERSONAL_MATCH_END_AT + " TEXT," + COLUMN_PERSONAL_MATCH_GAME_TYPE
+            + " TEXT," + COLUMN_PERSONAL_MATCH_INIT_PLAYERS + " INTEGER,"
+            + COLUMN_PERSONAL_MATCH_NUM_PLAYER_JOINED + " INTEGER,"
+            + " FOREIGN KEY (" + COLUMN_PERSONAL_MATCH_PLAYER_ID + ") REFERENCES " + TABLE_PLAYER + "(" + COLUMN_PLAYER_PLAYER_ID + "));";
+
+    /** Drop personal_match table sql query */
+    private String DROP_PERSONAL_MATCH_TABLE = "DROP TABLE IF EXISTS " + TABLE_PERSONAL_MATCH;
+
+
+
+    /** Create personal_match_players table sql query */
+    private String CREATE_PERSONAL_MATCH_PLAYER_TABLE = "CREATE TABLE " + TABLE_PERSONAL_MATCH_PLAYERS + "("
+            + COLUMN_PERSONAL_MATCH_PLAYERS_MATCH_ID + " INTEGER," + COLUMN_PERSONAL_MATCH_PLAYERS_PLAYER_ID
+            + " INTEGER,"
+            + "PRIMARY KEY (" + COLUMN_PERSONAL_MATCH_PLAYERS_MATCH_ID + ", " + COLUMN_PERSONAL_MATCH_PLAYERS_PLAYER_ID + "),"
+            +  " FOREIGN KEY (" + COLUMN_PERSONAL_MATCH_PLAYERS_MATCH_ID + ") REFERENCES " + TABLE_PERSONAL_MATCH + "(" + COLUMN_PERSONAL_MATCH_ID + "),"
+            +  " FOREIGN KEY (" + COLUMN_PERSONAL_MATCH_PLAYERS_PLAYER_ID + ") REFERENCES " + TABLE_PLAYER + "(" + COLUMN_PLAYER_PLAYER_ID + "));";
+
+    /** Drop player table sql query */
+    private String DROP_PERSONAL_MATCH_PLAYER_TABLE = "DROP TABLE IF EXISTS " + TABLE_PERSONAL_MATCH_PLAYERS;
+
+
 
 
     /**
