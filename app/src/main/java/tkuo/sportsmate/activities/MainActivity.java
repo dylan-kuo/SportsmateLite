@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity  {
     private CircleImageView headerProfileImage;
     private TextView name;
     private Toolbar mToolbar;
-    private User user;
+    private User currentUser;
     private DatabaseHelper databaseHelper;
 
     @Override
@@ -91,9 +91,14 @@ public class MainActivity extends AppCompatActivity  {
     private void initObjects() {
         databaseHelper = new DatabaseHelper(activity);
 
-        // Received the user object from either setup activity (after user finishes setup) or login activity (User finishes login)
+        // Receive user object from either login activity or setup activity
         Intent i = getIntent();
-        user = (User) i.getSerializableExtra("current_user_obj"); // Get the user object passed from register activity
+        currentUser = i.getParcelableExtra("current_user_obj");
+
+        // Below is the old method using Serializable
+        //Intent i = getIntent();
+        //currentUser = (User) i.getSerializableExtra("current_user_obj");
+
     }
 
 
@@ -103,13 +108,17 @@ public class MainActivity extends AppCompatActivity  {
 
 
         // Check if user is authorized or not. If not, send it to login page
-        if(user == null) {
+        if(currentUser == null) {
             sendUserToLoginActivity();
         }
 
         else {
-            Glide.with(this).load(user.getImageUri()).into(headerProfileImage); // Set navigation header picture
-            name.setText(user.getFirstName()+ " " + user.getLastName()); // set navigation header user's name
+            // Set up navigation header picture
+            if (currentUser.getImageUri() != null) {
+                Glide.with(this).load(currentUser.getImageUri()).into(headerProfileImage);
+            }
+            // set up navigation header user's name
+            name.setText(currentUser.getFirstName()+ " " + currentUser.getLastName());
         }
     }
 
