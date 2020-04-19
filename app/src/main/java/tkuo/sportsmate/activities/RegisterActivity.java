@@ -1,24 +1,16 @@
 package tkuo.sportsmate.activities;
 
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-
-import android.os.Parcelable;
-import android.renderscript.ScriptGroup;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.Serializable;
-
 import tkuo.sportsmate.R;
 import tkuo.sportsmate.utility.InputValidation;
 import tkuo.sportsmate.sql.DatabaseHelper;
@@ -68,7 +60,7 @@ public class RegisterActivity extends AppCompatActivity implements Serializable 
         createAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                postDataToSQLite();
+                saveRegisterInformation();
             }
         });
 
@@ -92,48 +84,49 @@ public class RegisterActivity extends AppCompatActivity implements Serializable 
     /**
      * This method is to validate the input text fields and post data to SQLite
      */
-    private void postDataToSQLite() {
+    private void saveRegisterInformation() {
+
+        // Strings of input
+        String str_userName = userName.getText().toString().trim();
+        String str_userPassword = userPassword.getText().toString().trim();
+        String str_userConfirmPassword = userConfirmPassword.getText().toString().trim();
 
         // Check if username is empty
-        if (!inputValidation.isEditTextFilled(userName)) {
+        if (inputValidation.isValueNotFilled(str_userName)) {
             Toast.makeText(this, "Username cannot be empty...", Toast.LENGTH_SHORT).show();
             return;
         }
-        // Check if username format is valid
-        if (!inputValidation.isEditTextValid(userName)) {
-            Toast.makeText(this, "Please enter valid username...", Toast.LENGTH_SHORT).show();
+        // Check if username format is valid (No special characters)
+        if (inputValidation.isSpecialChar(str_userName)) {
+            Toast.makeText(this, "Username cannot contain special characters...", Toast.LENGTH_SHORT).show();
             return;
         }
         // Check if password is empty
-        if (!inputValidation.isEditTextFilled(userPassword)) {
+        if (inputValidation.isValueNotFilled(str_userPassword)) {
             Toast.makeText(this, "Password cannot be empty...", Toast.LENGTH_SHORT).show();
             return;
         }
         // Check if password format is valid
-        if (!inputValidation.isEditTextValid(userPassword)) {
-            Toast.makeText(this, "Please enter valid password...", Toast.LENGTH_SHORT).show();
+        if (!inputValidation.isPasswordValid(str_userPassword)) {
+            Toast.makeText(this, "Password must be at least 6 characters (at least 1 digit, 1 uppercase & 1 lowercase character)", Toast.LENGTH_LONG).show();
             return;
         }
         // Check if confirm password is empty
-        if (!inputValidation.isEditTextFilled(userConfirmPassword)) {
+        if (inputValidation.isValueNotFilled(str_userConfirmPassword)) {
             Toast.makeText(this, "Confirm password cannot be empty...", Toast.LENGTH_SHORT).show();
             return;
         }
-        // Check if confirm password format is valid
-        if (!inputValidation.isEditTextValid(userConfirmPassword)) {
-            Toast.makeText(this, "Please enter valid confirm password...", Toast.LENGTH_SHORT).show();
-            return;
-        }
+
         // Check if confirm password matches password
         if (!inputValidation.isPasswordMatched(userPassword, userConfirmPassword)) {
             Toast.makeText(this, "Password does not match...", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (!databaseHelper.checkUser(userName.getText().toString().trim())) {
+        if (!databaseHelper.checkUser(str_userName)) {
 
-            user.setUsername(userName.getText().toString().trim());
-            user.setPassword(userPassword.getText().toString().trim());
+            user.setUsername(str_userName);
+            user.setPassword(str_userPassword);
 
             //emptyInputEditText();
             sendUserToSetupActivity(user);  // This will pass User object to setup activity to finish filling in all data for the user instance in SQLite db
@@ -144,17 +137,6 @@ public class RegisterActivity extends AppCompatActivity implements Serializable 
         }
     }
 
-    /**
-     *
-     * This method is to switch the user to setup activity
-     */
-    private void sendUserToSetupActivity() {
-
-        Intent setupIntent = new Intent(RegisterActivity.this, SetupActivity.class);
-        setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(setupIntent);
-        finish();
-    }
 
     /**
      * NOTE: I use this method because it passes the User object to setup intent which is more convenient to fill in data in db

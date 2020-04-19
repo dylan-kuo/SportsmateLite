@@ -1,37 +1,15 @@
 package tkuo.sportsmate.activities;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.provider.MediaStore;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-
-import com.squareup.picasso.Picasso;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
-
-
-
-import java.io.Serializable;
-import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import tkuo.sportsmate.R;
@@ -44,20 +22,17 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
 
     private final AppCompatActivity activity = SetupActivity.this;
     private EditText firstName, lastName;
-    private RadioGroup gender;
+    private RadioGroup radioGroup;
     private Button saveInformationButton;
     private CircleImageView profileImage;
-    private ProgressDialog loadingBar;
-    private RadioButton radioButton;
+    private RadioButton selectedGender;
+
 
     final static int IMAGE_PICKER = 1;
 
     private InputValidation inputValidation;
     private DatabaseHelper databaseHelper;
     private User currentUser;
-
-
-    private String UsersRef;
 
 
     @Override
@@ -77,11 +52,9 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     private void initViews() {
         firstName = (EditText) findViewById(R.id.setup_first_name);
         lastName = (EditText) findViewById(R.id.setup_last_name);
-        gender = (RadioGroup) findViewById(R.id.setup_gender);
+        radioGroup = (RadioGroup) findViewById(R.id.setup_gender);
         saveInformationButton = (Button) findViewById(R.id.setup_information_button);
         profileImage = (CircleImageView) findViewById(R.id.setup_profile_image);
-        loadingBar = new ProgressDialog(this);
-
     }
 
 
@@ -91,6 +64,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     private void initListeners() {
         saveInformationButton.setOnClickListener(SetupActivity.this);
         profileImage.setOnClickListener(this);
+
     }
 
 
@@ -143,7 +117,6 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
             profileImage.setImageURI(fullPhotoUri);
 
             currentUser.setImageUri(fullPhotoUri.toString());
-            //String realUri = getRealPathFromURI(fullPhotoUri);
         }
     }
 
@@ -155,39 +128,44 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     private void saveAccountSetupInformation() {
 
         // Get the selected radio button (male/female)
-        int radioButtonID = gender.getCheckedRadioButtonId();
-        radioButton = (RadioButton) gender.findViewById(radioButtonID);
+        int radioButtonID = radioGroup.getCheckedRadioButtonId();
+        selectedGender = (RadioButton) radioGroup.findViewById(radioButtonID);
+
+        // Strings of input
+        String str_firstName = firstName.getText().toString().trim();
+        String str_lastName = lastName.getText().toString().trim();
+        String str_selected_gender = selectedGender.getText().toString().trim();
+
 
         // Check if first name is empty
-        if(!inputValidation.isEditTextFilled(firstName)) {
+        if(inputValidation.isValueNotFilled(str_firstName)) {
             Toast.makeText(this, "First name cannot be empty...", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Check if first name format is valid
-        else if (!inputValidation.isEditTextValid(firstName)) {
-            Toast.makeText(this, "Please enter valid first password...", Toast.LENGTH_SHORT).show();
+        // Check if first name format is valid (No digit and special characters allowed)
+        if ((inputValidation.isNumberChar(str_firstName)) || (inputValidation.isSpecialChar(str_firstName))) {
+            Toast.makeText(this, "Please enter a valid first name...", Toast.LENGTH_SHORT).show();
             return;
         }
+
         // CHeck if last name is empty
-        else if(!inputValidation.isEditTextFilled(lastName)) {
+        if(inputValidation.isValueNotFilled(str_lastName)) {
             Toast.makeText(this, "Please enter your last name...", Toast.LENGTH_SHORT).show();
             return;
         }
-        // Check if last name format is valid
-        else if (!inputValidation.isEditTextValid(lastName)) {
-            Toast.makeText(this, "Please enter valid last password...", Toast.LENGTH_SHORT).show();
+
+        // Check if last name format is valid (No digit and special characters allowed)
+        if (inputValidation.isNumberChar(str_lastName) || inputValidation.isSpecialChar(str_lastName)) {
+            Toast.makeText(this, "Please enter a valid last name...", Toast.LENGTH_SHORT).show();
             return;
         }
-        // Check if radio button is empty
-        else if (gender.getCheckedRadioButtonId() == -1) {
-            Toast.makeText(this, "Please Select your gender...", Toast.LENGTH_SHORT).show();
-        }
 
-        else {  // If every thing is fine, add new user to SQLite db
-            currentUser.setFirstName(firstName.getText().toString().trim());
-            currentUser.setLastName(lastName.getText().toString().trim());
-            currentUser.setGender(radioButton.getText().toString().trim());
+        // If every thing is fine, add new user to SQLite db
+        else {
+            currentUser.setFirstName(str_firstName);
+            currentUser.setLastName(str_lastName);
+            currentUser.setGender(str_selected_gender);
             databaseHelper.addUser(currentUser);
             Toast.makeText(this, "Welcome " + currentUser.getFirstName(), Toast.LENGTH_SHORT).show();
             sendUserToMainActivity();
@@ -208,21 +186,4 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         finish();
     }
 
-
-    /**
-     * This method returns the real URI (path) in android (no need for use)
-     */
-    private String getRealPathFromURI(Uri contentURI) {
-        String result;
-        Cursor cursor = getContentResolver().query(contentURI, null, null, null, null);
-        if (cursor == null) { // Source is Dropbox or other similar local file path
-            result = contentURI.getPath();
-        } else {
-            cursor.moveToFirst();
-            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-            result = cursor.getString(idx);
-            cursor.close();
-        }
-        return result;
-    }
 }

@@ -1,7 +1,4 @@
 package tkuo.sportsmate.model;
-import android.net.Uri;
-
-import java.io.Serializable;
 import android.os.Parcel;
 import android.os.Parcelable;
 

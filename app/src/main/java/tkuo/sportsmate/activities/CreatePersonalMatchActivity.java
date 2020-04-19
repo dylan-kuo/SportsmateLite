@@ -178,6 +178,10 @@ public class CreatePersonalMatchActivity extends AppCompatActivity {
         timePickerDialog.show();
     }
 
+    private void savePersonalMatchInformation() {
+
+    }
+
 
     /*
     private void savePersonalMatchInformation() {

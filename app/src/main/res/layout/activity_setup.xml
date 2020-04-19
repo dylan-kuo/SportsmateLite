@@ -71,7 +71,8 @@
         android:layout_marginLeft="7dp"
         android:layout_marginTop="22dp"
         android:layout_marginRight="7dp"
-        android:padding="14dp">
+        android:padding="14dp"
+        android:checkedButton="@+id/setup_gender_male" >
 
         <TextView
             android:id="@+id/textView"
