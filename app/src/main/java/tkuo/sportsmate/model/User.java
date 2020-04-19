@@ -18,7 +18,7 @@ public class User implements Parcelable {
         }
     };
 
-    private int id;
+    private long id;
     private String username;
     private String password;
     private String firstName;
@@ -30,11 +30,11 @@ public class User implements Parcelable {
         // Constructor
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -88,7 +88,7 @@ public class User implements Parcelable {
 
     // Parcelling part
     public User(Parcel in) {
-        this.id = in.readInt();
+        this.id = in.readLong();
         this.username = in.readString();
         this.password = in.readString();
         this.firstName = in.readString();
@@ -104,7 +104,7 @@ public class User implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
+        dest.writeLong(this.id);
         dest.writeString(this.username);
         dest.writeString(this.password);
         dest.writeString(this.firstName);

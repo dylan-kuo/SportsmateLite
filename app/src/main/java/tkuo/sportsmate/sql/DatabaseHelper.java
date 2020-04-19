@@ -69,7 +69,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // *** PLAYER TABLE ***
     /** Create player table sql query */
     private String CREATE_PLAYER_TABLE = "CREATE TABLE " + TABLE_PLAYER + "("
-            + COLUMN_PLAYER_PLAYER_ID + " INTEGER PRIMARY KEY," + COLUMN_PLAYER_USER_ID
+            + COLUMN_PLAYER_PLAYER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_PLAYER_USER_ID
             + " INTEGER,"
             +  " FOREIGN KEY (" + COLUMN_PLAYER_USER_ID + ") REFERENCES " + TABLE_USER + "(" + COLUMN_USER_ID + "));";
 
@@ -127,6 +127,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop User Table if exists
         db.execSQL(DROP_USER_TABLE);
+        db.execSQL(DROP_PLAYER_TABLE);
 
         // Create tables again
         onCreate(db);
@@ -149,19 +150,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_USER_IMAGE_URI, user.getImageUri());
 
         // Inserting Row
-        db.insert(TABLE_USER, null, values);
+        long insertedUserId = db.insert(TABLE_USER, null, values);  // auto incremented id
         db.close();
 
-        //addPlayer();
+        addPlayer(insertedUserId);
     }
 
-    /*
-    public void addPlayer(String ) {
+
+    public void addPlayer(long userId) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_PLAYER_USER_ID);
-    } */
+        values.put(COLUMN_PLAYER_USER_ID, userId);
+        db.insert(TABLE_PLAYER, null, values);
+        db.close();
+    }
 
 
     /**
