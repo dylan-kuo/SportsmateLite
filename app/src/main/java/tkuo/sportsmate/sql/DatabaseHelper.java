@@ -45,7 +45,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_PERSONAL_MATCH_INIT_PLAYERS = "num_initial_players";
     private static final String COLUMN_PERSONAL_MATCH_NUM_PLAYER_JOINED = "num_players_joined";
 
-    // Player Table Column names
+    // player Table Column names
     private static final String COLUMN_PLAYER_PLAYER_ID = "player_id";
     private static final String COLUMN_PLAYER_USER_ID = "user_id";
 
@@ -54,6 +54,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_PERSONAL_MATCH_PLAYERS_PLAYER_ID = "p_id";
 
 
+    // *** USER TABLE ***
     /** Create user table sql query */
     private String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
             + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_USER_FIRST_NAME
@@ -65,7 +66,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_USER;
 
 
-
+    // *** PLAYER TABLE ***
     /** Create player table sql query */
     private String CREATE_PLAYER_TABLE = "CREATE TABLE " + TABLE_PLAYER + "("
             + COLUMN_PLAYER_PLAYER_ID + " INTEGER PRIMARY KEY," + COLUMN_PLAYER_USER_ID
@@ -76,7 +77,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private String DROP_PLAYER_TABLE = "DROP TABLE IF EXISTS " + TABLE_PLAYER;
 
 
-
+    // *** PERSONAL_MATCH TABLE ***
     /** Create personal_match table sql query */
     private String CREATE_PERSONAL_MATCH_TABLE = "CREATE TABLE " + TABLE_PERSONAL_MATCH + "("
             + COLUMN_PERSONAL_MATCH_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_PERSONAL_MATCH_PLAYER_ID
@@ -90,7 +91,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private String DROP_PERSONAL_MATCH_TABLE = "DROP TABLE IF EXISTS " + TABLE_PERSONAL_MATCH;
 
 
-
+    // *** PERSONAL_MATCH_PLAYER TABLE ***
     /** Create personal_match_players table sql query */
     private String CREATE_PERSONAL_MATCH_PLAYER_TABLE = "CREATE TABLE " + TABLE_PERSONAL_MATCH_PLAYERS + "("
             + COLUMN_PERSONAL_MATCH_PLAYERS_MATCH_ID + " INTEGER," + COLUMN_PERSONAL_MATCH_PLAYERS_PLAYER_ID
@@ -118,6 +119,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_USER_TABLE);
+        db.execSQL(CREATE_PLAYER_TABLE);
     }
 
 
@@ -149,7 +151,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Inserting Row
         db.insert(TABLE_USER, null, values);
         db.close();
+
+        //addPlayer();
     }
+
+    /*
+    public void addPlayer(String ) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PLAYER_USER_ID);
+    } */
 
 
     /**
