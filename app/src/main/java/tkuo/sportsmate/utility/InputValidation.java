@@ -1,8 +1,6 @@
 package tkuo.sportsmate.utility;
 
 import android.content.Context;
-import android.widget.EditText;
-import android.widget.RadioButton;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
