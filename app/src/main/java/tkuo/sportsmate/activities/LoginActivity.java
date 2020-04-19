@@ -3,17 +3,12 @@ package tkuo.sportsmate.activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
-
-import java.util.List;
 
 import tkuo.sportsmate.R;
 import tkuo.sportsmate.model.User;
@@ -62,7 +57,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 verifyFromSQLite();
-                //allowUserToLogin();   [old one]
             }
         });
 
@@ -86,32 +80,35 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
     }
 
     /**
      * This method is to validate the input text fields and verify login credentials from SQLite
      */
     private void verifyFromSQLite() {
+
+        // Strings of input
+        String str_userName = userName.getText().toString().trim();
+        String str_userPassword = userPassword.getText().toString().trim();
+
         // Check if username is empty
-        if (!inputValidation.isEditTextFilled(userName)) {
-            Toast.makeText(this, "Username Cannot Be Empty...", Toast.LENGTH_SHORT).show();
+        if (inputValidation.isValueNotFilled(str_userName)) {
+            Toast.makeText(this, "Username cannot be empty...", Toast.LENGTH_SHORT).show();
             return;
         }
 
         // Check if password is empty
-        if (!inputValidation.isEditTextFilled(userPassword)) {
-            Toast.makeText(this, "Password Cannot Be Empty...", Toast.LENGTH_SHORT).show();
+        if (inputValidation.isValueNotFilled(str_userPassword)) {
+            Toast.makeText(this, "Password cannot be empty...", Toast.LENGTH_SHORT).show();
             return;
         }
 
         // Validate the user
-        if (databaseHelper.checkUser(userName.getText().toString().trim(),
-                userPassword.getText().toString().trim())) {
+        if (databaseHelper.checkUser(str_userName, str_userPassword)) {
             sendUserToMainActivity();
             emptyInputEditText();
         } else {
-            Toast.makeText(this, "Wrong Username or Password...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Wrong username or password...", Toast.LENGTH_SHORT).show();
         }
     }
 

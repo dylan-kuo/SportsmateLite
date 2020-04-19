@@ -22,39 +22,7 @@ public class InputValidation {
 
 
     /**
-     * Method to check empty
-     *
-     * @param editText
-     * @return true/false
-     */
-    public boolean isEditTextFilled(EditText editText) {
-        String value = editText.getText().toString().trim();
-        if (value.isEmpty()) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Method to check empty
-     *
-     * @param radioButton
-     * @return true/false
-     */
-    public boolean isRadioButtonFilled(RadioButton radioButton) {
-        String value = radioButton.getText().toString();
-        if (value.isEmpty()) {
-            return false;
-        }
-
-        return true;
-    }
-
-
-    // **************************************************************************
-    /**
-     * Check empty value
+     * Check if the string is empty
      *
      * Used for: all input
      * @param str
@@ -87,11 +55,11 @@ public class InputValidation {
 
 
     /**
-     * Check number character
+     * Check if the string contains any digit
      *
      * Used for: firstName, lastName
      * @param str
-     * @return true if value is number, false otherwise
+     * @return true if value contains numeric character, false otherwise
      */
     public boolean isNumberChar(String str) {
 
@@ -104,7 +72,7 @@ public class InputValidation {
 
 
     /**
-     * Check valid password
+     * Check if the password is valid
      *
      * Used for: password
      * @param str
@@ -129,38 +97,17 @@ public class InputValidation {
     }
 
 
-
-
-
-
-
-
-
     /**
-     * Method to check valid format
+     * Check if the two passwords match
      *
-     * @param editText
-     * @return true/false
+     * @param str1, str2
+     * @return true if two passwords match, false otherwise
      */
-    public boolean isEditTextValid(EditText editText) {
-        String value = editText.getText().toString().trim();
-        // NOT DONE YET
-        return true;
-    }
-
-
-    /**
-     * Method to check if passwords are matcged
-     *
-     * @param editText1, editText2
-     * @return true/false
-     */
-    public boolean isPasswordMatched (EditText editText1, EditText editText2) {
-        String value1 = editText1.getText().toString().trim();
-        String value2 = editText2.getText().toString().trim();
-        if (!value1.equals(value2))
+    public boolean isPasswordMatched (String str1, String str2) {
+        if (!str1.equals(str2))
             return false;
 
         return true;
     }
+
 }

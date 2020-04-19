@@ -118,7 +118,7 @@ public class RegisterActivity extends AppCompatActivity implements Serializable 
         }
 
         // Check if confirm password matches password
-        if (!inputValidation.isPasswordMatched(userPassword, userConfirmPassword)) {
+        if (!inputValidation.isPasswordMatched(str_userPassword, str_userConfirmPassword)) {
             Toast.makeText(this, "Password does not match...", Toast.LENGTH_SHORT).show();
             return;
         }
