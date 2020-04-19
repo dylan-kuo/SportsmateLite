@@ -1,7 +1,10 @@
 package tkuo.sportsmate.utility;
 
 import android.content.Context;
+import android.util.Log;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -98,6 +101,7 @@ public class InputValidation {
     /**
      * Check if the two passwords match
      *
+     * Used for password
      * @param str1, str2
      * @return true if two passwords match, false otherwise
      */
@@ -107,5 +111,62 @@ public class InputValidation {
 
         return true;
     }
+
+
+    /**
+     * Check if the date is legal (No prior to today)
+     *
+     * Used for: date(create personal match)
+     * @param date, time
+     * @return true if the date is no prior to today, false otherwise
+     */
+    public boolean isDateValid(String date, String time) {
+        SimpleDateFormat sd = new SimpleDateFormat("M/dd/yyyy HH:mm");
+        try {
+            String input = date + " " + time;
+            sd.setLenient(false);
+            Date input_date = sd.parse(input);
+            Date current_date = sd.parse(sd.format((new Date())));
+            long inputTime = input_date.getTime();
+            long currentTime = current_date.getTime();
+            long diff = inputTime - currentTime;
+
+            if (diff >= 0) {
+                return true;
+            }
+        }
+        catch (Exception e) {
+            return false;
+        }
+
+        return false;
+    }
+
+
+    /**
+     * Check if the date is legal (No prior to today)
+     *
+     * Used for: date(create personal match)
+     * @param start, end
+     * @return true if the date is no prior to today, false otherwise
+     */
+    public boolean isTimeValid(String start, String end) {
+        SimpleDateFormat sd = new SimpleDateFormat("HH:mm");
+
+        try {
+            Date inTime = sd.parse(start);
+            Date outTime = sd.parse(end);
+
+            if (inTime.before(outTime))
+                return true;
+        }
+        catch (Exception e) {
+            return false;
+        }
+
+        return false;
+    }
+
+
 
 }
