@@ -43,8 +43,8 @@ public class MainActivity extends AppCompatActivity  {
 
         initViews();
         initObjects();
-
     }
+
 
     /**
      * This method is to initialize views
@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity  {
 
     }
 
+
     /**
      * This method is to initialize objects to be used
      */
@@ -94,6 +95,8 @@ public class MainActivity extends AppCompatActivity  {
         // Receive user object from either login activity or setup activity
         Intent i = getIntent();
         currentUser = i.getParcelableExtra("current_user_obj");
+
+
 
         // Below is the old method using Serializable
         //Intent i = getIntent();
@@ -158,7 +161,7 @@ public class MainActivity extends AppCompatActivity  {
     private void UserMenuSelector(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_create_match:
-                sendUserToCreateMatchActivity();
+                sendUserToChooseMatchActivity();
                 break;
 
             case R.id.nav_profile:
@@ -191,12 +194,13 @@ public class MainActivity extends AppCompatActivity  {
 
 
     /**
-     * This method is to switch to CreateMatchActivity
+     * This method is to switch to ChooseMatchActivity
      *
      */
-    private void sendUserToCreateMatchActivity() {
+    private void sendUserToChooseMatchActivity() {
         Intent createMatchIntent = new Intent(MainActivity.this, ChooseMatchActivity.class);
         //createMatchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        createMatchIntent.putExtra("current_username", currentUser.getUsername());  // Pass username to chooseMatchActivity
         startActivity(createMatchIntent);
         //finish();
     }

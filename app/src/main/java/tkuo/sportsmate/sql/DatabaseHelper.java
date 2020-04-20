@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import tkuo.sportsmate.model.PersonalMatch;
 import tkuo.sportsmate.model.User;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // personal_match table column names
     private static final String COLUMN_PERSONAL_MATCH_ID = "pmatch_id";
-    private static final String COLUMN_PERSONAL_MATCH_PLAYER_ID = "player_id";
+    private static final String COLUMN_PERSONAL_MATCH_PLAYER_ID = "host_player_id";
     private static final String COLUMN_PERSONAL_MATCH_LOCATION = "location";
     private static final String COLUMN_PERSONAL_MATCH_DATE = "date";
     private static final String COLUMN_PERSONAL_MATCH_START_AT = "start_at";
@@ -79,6 +80,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // *** PERSONAL_MATCH TABLE ***
     /** Create personal_match table sql query */
+
     private String CREATE_PERSONAL_MATCH_TABLE = "CREATE TABLE " + TABLE_PERSONAL_MATCH + "("
             + COLUMN_PERSONAL_MATCH_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_PERSONAL_MATCH_PLAYER_ID
             + " INTEGER," + COLUMN_PERSONAL_MATCH_LOCATION + " TEXT," + COLUMN_PERSONAL_MATCH_DATE + " TEXT," +
@@ -86,6 +88,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + " TEXT," + COLUMN_PERSONAL_MATCH_INIT_PLAYERS + " INTEGER,"
             + COLUMN_PERSONAL_MATCH_NUM_PLAYER_JOINED + " INTEGER,"
             + " FOREIGN KEY (" + COLUMN_PERSONAL_MATCH_PLAYER_ID + ") REFERENCES " + TABLE_PLAYER + "(" + COLUMN_PLAYER_PLAYER_ID + "));";
+
 
     /** Drop personal_match table sql query */
     private String DROP_PERSONAL_MATCH_TABLE = "DROP TABLE IF EXISTS " + TABLE_PERSONAL_MATCH;
@@ -118,8 +121,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        // Create User Table
         db.execSQL(CREATE_USER_TABLE);
+        // Create Player Table
         db.execSQL(CREATE_PLAYER_TABLE);
+        // Create Personal Match Table
+        db.execSQL(CREATE_PERSONAL_MATCH_TABLE);
+        // Create Personal Match Players Table
+        db.execSQL(CREATE_PERSONAL_MATCH_PLAYER_TABLE);
     }
 
 
@@ -127,7 +136,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop User Table if exists
         db.execSQL(DROP_USER_TABLE);
+        // Drop Player Table if exists
         db.execSQL(DROP_PLAYER_TABLE);
+        // Drop Personal Match Table if exists
+        db.execSQL(DROP_PERSONAL_MATCH_TABLE);
+        // Drop Personal Match Player Table if exists
 
         // Create tables again
         onCreate(db);
@@ -164,6 +177,56 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_PLAYER_USER_ID, userId);
         db.insert(TABLE_PLAYER, null, values);
         db.close();
+    }
+
+
+    /**
+     * This method is to add user record
+     *
+     * @param currentUser, personalMatch
+     */
+    public void addPersonalMatch(User currentUser, PersonalMatch personalMatch) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        /*
+        String addPersonalMatch = "INSERT INTO" + TABLE_PERSONAL_MATCH + "(" +
+                COLUMN_PERSONAL_MATCH_PLAYER_ID  + ", " + COLUMN_PERSONAL_MATCH_LOCATION  + ", " +
+                COLUMN_PERSONAL_MATCH_DATE  + ", " + COLUMN_PERSONAL_MATCH_START_AT + ", " +
+                COLUMN_PERSONAL_MATCH_END_AT  + ", " + COLUMN_PERSONAL_MATCH_GAME_TYPE + ", " +
+                COLUMN_PERSONAL_MATCH_INIT_PLAYERS  + ", " + COLUMN_PERSONAL_MATCH_NUM_PLAYER_JOINED + ")" +
+                "VALUES((SELECT " + COLUMN_PLAYER_PLAYER_ID +
+                " FROM " + TABLE_PLAYER +
+                " WHERE " + COLUMN_PLAYER_USER_ID + "=" + currentUser.getId() + ")," +
+                personalMatch.getLocation() + ", " + personalMatch.getGameDate() + ", " +
+                personalMatch.getStartAt() + ", " + personalMatch.getEndAt() + ", " +
+                personalMatch.getGameType() + ", " + personalMatch.getNumInitialPlayers() + ", " +
+                personalMatch.getNumPlayersJoined() + ");";
+
+
+        db.execSQL(addPersonalMatch);
+        */
+
+
+
+        // **** NOTE ****
+        // Below is the original approach but it cannot handle foreign key,
+        // since "ContentValues" supports only plain values, not SQL expressions.
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PERSONAL_MATCH_PLAYER_ID, currentUser.getId());
+        values.put(COLUMN_PERSONAL_MATCH_LOCATION, personalMatch.getLocation());
+        values.put(COLUMN_PERSONAL_MATCH_DATE, personalMatch.getGameDate());
+        values.put(COLUMN_PERSONAL_MATCH_START_AT, personalMatch.getStartAt());
+        values.put(COLUMN_PERSONAL_MATCH_END_AT, personalMatch.getEndAt());
+        values.put(COLUMN_PERSONAL_MATCH_GAME_TYPE, personalMatch.getGameType());
+        values.put(COLUMN_PERSONAL_MATCH_INIT_PLAYERS, personalMatch.getNumInitialPlayers());
+        values.put(COLUMN_PERSONAL_MATCH_NUM_PLAYER_JOINED, personalMatch.getNumPlayersJoined());
+
+        // Inserting Row
+        db.insert(TABLE_PERSONAL_MATCH, null, values);
+        db.close();
+
     }
 
 
@@ -237,6 +300,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_USER_FIRST_NAME,
                 COLUMN_USER_LAST_NAME,
                 COLUMN_USER_GENDER,
+                COLUMN_USER_USERNAME,
                 COLUMN_USER_PASSWORD,
                 COLUMN_USER_IMAGE_URI
         };
@@ -273,6 +337,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 user.setFirstName(cursor.getString(cursor.getColumnIndex(COLUMN_USER_FIRST_NAME)));
                 user.setLastName(cursor.getString(cursor.getColumnIndex(COLUMN_USER_LAST_NAME)));
                 user.setGender(cursor.getString(cursor.getColumnIndex(COLUMN_USER_GENDER)));
+                user.setUsername(cursor.getString(cursor.getColumnIndex(COLUMN_USER_USERNAME)));
                 user.setPassword(cursor.getString(cursor.getColumnIndex(COLUMN_USER_PASSWORD)));
                 user.setImageUri(cursor.getString(cursor.getColumnIndex(COLUMN_USER_IMAGE_URI)));
                 // Adding user record to list

@@ -26,10 +26,13 @@ import android.app.Dialog;
 import android.widget.Toast;
 import java.util.HashMap;
 import tkuo.sportsmate.R;
+import tkuo.sportsmate.model.PersonalMatch;
+import tkuo.sportsmate.model.User;
 import tkuo.sportsmate.sql.DatabaseHelper;
 import tkuo.sportsmate.utility.InputValidation;
 
 public class CreatePersonalMatchActivity extends AppCompatActivity {
+
     private final AppCompatActivity activity = CreatePersonalMatchActivity.this;
     private Button createButton;
     private TextView title;
@@ -51,7 +54,8 @@ public class CreatePersonalMatchActivity extends AppCompatActivity {
 
     private InputValidation inputValidation;
     private DatabaseHelper databaseHelper;
-
+    private PersonalMatch newPersonalMatch;
+    private String currentUsername;
 
 
 
@@ -63,7 +67,11 @@ public class CreatePersonalMatchActivity extends AppCompatActivity {
         initViews();
         initListeners();
         initObjects();
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
 
     }
 
@@ -107,6 +115,7 @@ public class CreatePersonalMatchActivity extends AppCompatActivity {
      * This method is to initialize listeners
      */
     private void initListeners() {
+
         // Create Button
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,6 +157,12 @@ public class CreatePersonalMatchActivity extends AppCompatActivity {
 
         databaseHelper = new DatabaseHelper(activity);
         inputValidation = new InputValidation(activity);
+        newPersonalMatch = new PersonalMatch();
+
+        // Receive username of current user (logged user) from ChooseMatchActivity
+        Intent i = getIntent();
+        currentUsername = i.getStringExtra("current_username");
+
     }
 
 
@@ -244,7 +259,7 @@ public class CreatePersonalMatchActivity extends AppCompatActivity {
             return;
         }
 
-        // Note: We don't need to check game type since the default value is set.
+        // **** Note: We don't need to check game type since the default value is set.  ****
 
         // Check if location is empty
         if(inputValidation.isValueNotFilled(numOfInitPlayer)) {
@@ -264,80 +279,38 @@ public class CreatePersonalMatchActivity extends AppCompatActivity {
             return;
         }
 
-    }
+        else {
+
+            // Get the User object from SQLite db based on the given username
+            User currentUser = databaseHelper.getSingleUser(currentUsername).get(0);
+
+            // Get the user id in the user table
+            long userId = currentUser.getId();
+
+            // Get player object from SQLite db based on the id in User Table
+            // Relationship:  user.id (User Table) = player.user_id (Player Table)
+
+            // TODO: create a player class  (4/20)
+            // TODO: make a method in DataBaseHelper named getSinglePlayer
+            // Player player = databaseHelper.getSinglePlayer(userId)
+            // Long playerID = player.getPlayerId()
+
+            // newPersonalMatch.setHostPlayerId(playerID);
+            newPersonalMatch.setLocation(str_location);
+            newPersonalMatch.setGameDate(str_date);
+            newPersonalMatch.setStartAt(str_startTime);
+            newPersonalMatch.setEndAt(str_endTime);
+            newPersonalMatch.setGameType(str_gameType);
+            newPersonalMatch.setNumInitialPlayers(Integer.parseInt(numOfInitPlayer));
+
+            // Post data to personal_match table in the SQLite db
+            databaseHelper.addPersonalMatch(currentUser, newPersonalMatch);
 
 
-
-
-
-
-
-    /*
-    private void savePersonalMatchInformation() {
-        String location_s = location.getText().toString();
-        String date_s = date.getText().toString();
-        String start_from = start.getText().toString();
-        String end_to = end.getText().toString();
-        String number = numberOfPlayer.getText().toString();
-
-        if(TextUtils.isEmpty(location_s)){
-            Toast.makeText(this, "Please write the location of this game...", Toast.LENGTH_SHORT).show();
-        }
-        else if(TextUtils.isEmpty(date_s)){
-            Toast.makeText(this, "Please write the date of this game...", Toast.LENGTH_SHORT).show();
-        }
-        else if(TextUtils.isEmpty(start_from)){
-            Toast.makeText(this, "Please write the start time...", Toast.LENGTH_SHORT).show();
-        }
-        else if(TextUtils.isEmpty(end_to)){
-            Toast.makeText(this, "Please write the end time...", Toast.LENGTH_SHORT).show();
-        }
-        else if(TextUtils.isEmpty(number)){
-            Toast.makeText(this, "Please write the number of players...", Toast.LENGTH_SHORT).show();
-        }
-        else{
-            loadingBar.setTitle("Creating New Personal Match");
-            loadingBar.setMessage("Please wait, while we are creating new personal match...");
-            loadingBar.show();
-            loadingBar.setCanceledOnTouchOutside(true);
-
-            HashMap matchInfo = new HashMap();
-            matchInfo.put("host_id", currentUserID);
-            matchInfo.put("location", location_s);
-            matchInfo.put("date", date_s);
-            matchInfo.put("start_time", start_from);
-            matchInfo.put("end_time", end_to);
-            matchInfo.put("num_of_players", number);
-
-            PersonalMatchRef.child(String.valueOf(personal_id)).updateChildren(matchInfo).addOnCompleteListener(new OnCompleteListener() {
-                @Override
-                public void onComplete(@NonNull Task task) {
-                    if(task.isSuccessful()) {
-                        // startActivity(new Intent(getApplicationContext(),MainActivity.class));    // This works the same as senUserToMainActivity()
-                        sendUserToMainActivity();
-                        Toast.makeText(CreatePersonalMatchActivity.this, "Your personal match is created successfully.", Toast.LENGTH_LONG).show();
-                        loadingBar.dismiss();
-                        personal_id++;
-                    }
-                    else {
-                        String message = task.getException().getMessage();
-                        Toast.makeText(CreatePersonalMatchActivity.this, "Error occurred:" + message, Toast.LENGTH_SHORT).show();
-                        loadingBar.dismiss();
-                    }
-                }
-            });
         }
     }
 
 
-
-
-     */
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-    }
 
     // Switch to Main Activity and clear any other activities on top of it
     private void sendUserToMainActivity() {
