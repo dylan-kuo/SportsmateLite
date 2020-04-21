@@ -14,5 +14,5 @@ The Android app lets you:
 - Create Personal Profile
 - Create / Join a team
 - Create / Join a Personal Match Game
-- Create / Join a Team Match Game
+
 
