@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import tkuo.sportsmate.model.PersonalMatch;
+import tkuo.sportsmate.model.Player;
 import tkuo.sportsmate.model.User;
 
 import java.util.ArrayList;
@@ -107,8 +108,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private String DROP_PERSONAL_MATCH_PLAYER_TABLE = "DROP TABLE IF EXISTS " + TABLE_PERSONAL_MATCH_PLAYERS;
 
 
-
-
     /**
      * Constructor
      *
@@ -183,9 +182,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * This method is to add user record
      *
-     * @param currentUser, personalMatch
+     * @param personalMatch
      */
-    public void addPersonalMatch(User currentUser, PersonalMatch personalMatch) {
+    public void addPersonalMatch(PersonalMatch personalMatch) {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -203,7 +202,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 personalMatch.getGameType() + ", " + personalMatch.getNumInitialPlayers() + ", " +
                 personalMatch.getNumPlayersJoined() + ");";
 
-
         db.execSQL(addPersonalMatch);
         */
 
@@ -214,7 +212,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // since "ContentValues" supports only plain values, not SQL expressions.
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_PERSONAL_MATCH_PLAYER_ID, currentUser.getId());
+        values.put(COLUMN_PERSONAL_MATCH_PLAYER_ID, personalMatch.getHostPlayerId());
         values.put(COLUMN_PERSONAL_MATCH_LOCATION, personalMatch.getLocation());
         values.put(COLUMN_PERSONAL_MATCH_DATE, personalMatch.getGameDate());
         values.put(COLUMN_PERSONAL_MATCH_START_AT, personalMatch.getStartAt());
@@ -475,6 +473,62 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return false;
     }
+
+
+    /**
+     * This method is to fetch the user info and return the all the player records
+     * @param user_id
+     * @return list
+     */
+    public List<Player> getSinglePlayer(Long user_id) {
+        // Array of columns to fetch
+        String[] columns = {
+                COLUMN_PLAYER_PLAYER_ID,
+                COLUMN_PLAYER_USER_ID
+        };
+
+        // Selection criteria
+        String selection = COLUMN_PLAYER_USER_ID + " = ?";
+
+        // Selection argument
+        String[] selectionArgs = {Long.toString(user_id)};
+
+        List<Player> playerList = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Query the user table
+        /**
+         * Here query function is used to fetch records from player table this function works like we use sql query.
+         * SQL query equivalent to this query function is
+         * SELECT player_id, user_id FROM player WHERE user_id = 2;
+         */
+        Cursor cursor = db.query(TABLE_PLAYER,
+                columns,          // columns to return
+                selection,    // columns for the WHERE clause
+                selectionArgs, // the values for the WHERE clause
+                null,     // group the rows
+                null,      // filter by row groups
+                null);        // the sort order
+
+        // Traversing through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Player player = new Player();
+                player.setPlayerId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_PLAYER_PLAYER_ID))));
+                player.setUserId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_PLAYER_USER_ID))));
+                // Adding user record to list
+                playerList.add(player);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+
+        // Return player list
+        return playerList;
+    }
+
+
 }
 
 

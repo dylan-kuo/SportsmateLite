@@ -27,6 +27,7 @@ import android.widget.Toast;
 import java.util.HashMap;
 import tkuo.sportsmate.R;
 import tkuo.sportsmate.model.PersonalMatch;
+import tkuo.sportsmate.model.Player;
 import tkuo.sportsmate.model.User;
 import tkuo.sportsmate.sql.DatabaseHelper;
 import tkuo.sportsmate.utility.InputValidation;
@@ -283,19 +284,15 @@ public class CreatePersonalMatchActivity extends AppCompatActivity {
 
             // Get the User object from SQLite db based on the given username
             User currentUser = databaseHelper.getSingleUser(currentUsername).get(0);
+            long userId = currentUser.getId(); // Get the user id in the user table
 
-            // Get the user id in the user table
-            long userId = currentUser.getId();
-
-            // Get player object from SQLite db based on the id in User Table
+            // Get player object from SQLite db based on the user id in User Table
             // Relationship:  user.id (User Table) = player.user_id (Player Table)
 
-            // TODO: create a player class  (4/20)
-            // TODO: make a method in DataBaseHelper named getSinglePlayer
-            // Player player = databaseHelper.getSinglePlayer(userId)
-            // Long playerID = player.getPlayerId()
+            Player player = databaseHelper.getSinglePlayer(userId).get(0);
+            Long playerId = player.getPlayerId();
 
-            // newPersonalMatch.setHostPlayerId(playerID);
+            newPersonalMatch.setHostPlayerId(playerId);
             newPersonalMatch.setLocation(str_location);
             newPersonalMatch.setGameDate(str_date);
             newPersonalMatch.setStartAt(str_startTime);
@@ -304,8 +301,7 @@ public class CreatePersonalMatchActivity extends AppCompatActivity {
             newPersonalMatch.setNumInitialPlayers(Integer.parseInt(numOfInitPlayer));
 
             // Post data to personal_match table in the SQLite db
-            databaseHelper.addPersonalMatch(currentUser, newPersonalMatch);
-
+            databaseHelper.addPersonalMatch(newPersonalMatch);
 
         }
     }
