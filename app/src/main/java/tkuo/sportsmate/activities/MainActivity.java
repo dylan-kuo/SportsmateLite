@@ -173,6 +173,7 @@ public class MainActivity extends AppCompatActivity  {
                 break;
 
             case R.id.nav_personal_match:
+                sendUserToPersonalMatchListActivity();
                 Toast.makeText(this, "Personal Match", Toast.LENGTH_SHORT).show();
                 break;
 
@@ -204,4 +205,20 @@ public class MainActivity extends AppCompatActivity  {
         startActivity(createMatchIntent);
         //finish();
     }
+
+
+    /**
+     * This method is to switch to PersonalMatchListActivity
+     *
+     */
+    private void sendUserToPersonalMatchListActivity(){
+        Intent personalMatchListIntent = new Intent(MainActivity.this, PersonalMatchListActivity.class);
+        //personalMatchListIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        personalMatchListIntent.putExtra("current_username", currentUser.getUsername());  // Pass username to PersonalMatchListActivity
+        startActivity(personalMatchListIntent);
+        //finish();
+    }
 }
+
+
+

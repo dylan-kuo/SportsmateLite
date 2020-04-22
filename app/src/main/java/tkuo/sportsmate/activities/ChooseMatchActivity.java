@@ -86,9 +86,9 @@ public class ChooseMatchActivity extends AppCompatActivity {
     private void sendUserToCreatePersonalMatchActivity() {
 
         Intent personalMatchIntent = new Intent(ChooseMatchActivity.this, CreatePersonalMatchActivity.class);
-        personalMatchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        //personalMatchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         personalMatchIntent.putExtra("current_username", currentUsername);  // Pass username to CreatePersonalMatchActivity
         startActivity(personalMatchIntent);
-        finish();
+        //finish();
     }
 }
