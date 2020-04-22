@@ -70,6 +70,7 @@
         android:layout_marginTop="16dp"
         android:text="Don't have an account? Sign up Now"
         android:textAlignment="center"
+        android:clickable="true"
         android:textColor="@color/logoRed"
         android:textSize="16sp"
         android:textStyle="bold" />
