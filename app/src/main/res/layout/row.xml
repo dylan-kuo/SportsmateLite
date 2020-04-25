@@ -29,7 +29,7 @@
             android:textColor="#000"
             android:textStyle="bold"
             android:layout_margin="4dp"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:id="@+id/pmatch_location" />
 
         <TextView
@@ -39,7 +39,7 @@
             android:textColor="#a9a9a9"
             android:textStyle="bold"
             android:layout_margin="4dp"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:drawableLeft="@drawable/place_black_18dp"
             android:drawablePadding="2dip"
             android:id="@+id/pmatch_address" />
@@ -51,7 +51,7 @@
             android:textColor="#a9a9a9"
             android:textStyle="bold"
             android:layout_margin="4dp"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:drawableLeft="@drawable/date__black_18dp"
             android:drawablePadding="2dip"
             android:id="@+id/pmatch_game_date" />
@@ -63,7 +63,7 @@
             android:textColor="#a9a9a9"
             android:textStyle="bold"
             android:layout_margin="4dp"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:drawableLeft="@drawable/clock_black_18dp"
             android:drawablePadding="2dip"
             android:id="@+id/pmatch_game_time" />
@@ -75,7 +75,7 @@
             android:textColor="#a9a9a9"
             android:textStyle="bold"
             android:layout_margin="4dp"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:drawableLeft="@drawable/person_add_black_18dp"
             android:drawablePadding="2dip"
             android:id="@+id/pmatch_people_going" />

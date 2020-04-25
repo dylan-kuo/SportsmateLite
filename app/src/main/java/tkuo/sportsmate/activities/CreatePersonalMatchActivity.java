@@ -1,10 +1,8 @@
 package tkuo.sportsmate.activities;
 
-import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -14,17 +12,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-
 import java.util.Calendar;
-import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.widget.Toast;
-import java.util.HashMap;
+
 import tkuo.sportsmate.R;
 import tkuo.sportsmate.model.PersonalMatch;
 import tkuo.sportsmate.model.Player;
@@ -57,6 +48,7 @@ public class CreatePersonalMatchActivity extends AppCompatActivity {
     private DatabaseHelper databaseHelper;
     private PersonalMatch newPersonalMatch;
     private String currentUsername;
+    private User currentUser;
 
 
 
@@ -283,7 +275,7 @@ public class CreatePersonalMatchActivity extends AppCompatActivity {
         else {
 
             // Get the User object from SQLite db based on the given username
-            User currentUser = databaseHelper.getSingleUser(currentUsername).get(0);
+            currentUser = databaseHelper.getSingleUser(currentUsername).get(0);
             long userId = currentUser.getId(); // Get the user id in the user table
 
             // Get player object from SQLite db based on the user id in User Table
@@ -303,6 +295,9 @@ public class CreatePersonalMatchActivity extends AppCompatActivity {
             // Post data to personal_match table in the SQLite db
             databaseHelper.addPersonalMatch(newPersonalMatch);
 
+            // Go back to main activity
+            sendUserToMainActivity();
+
         }
     }
 
@@ -312,6 +307,7 @@ public class CreatePersonalMatchActivity extends AppCompatActivity {
     private void sendUserToMainActivity() {
         Intent mainIntent = new Intent(CreatePersonalMatchActivity.this, MainActivity.class);
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);  // Do this to prevent user from going back to Register activity unless clicking logout
+        mainIntent.putExtra("current_user_obj", currentUser);  // Pass user object to main activity
         startActivity(mainIntent);
         finish();
     }

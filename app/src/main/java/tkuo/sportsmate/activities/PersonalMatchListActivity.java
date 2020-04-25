@@ -20,6 +20,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import tkuo.sportsmate.R;
+import tkuo.sportsmate.adapters.PersonalMatchAdapter;
 import tkuo.sportsmate.model.PersonalMatch;
 import tkuo.sportsmate.sql.DatabaseHelper;
 
@@ -30,11 +31,10 @@ public class PersonalMatchListActivity extends AppCompatActivity {
     private DatabaseHelper databaseHelper;
     private String currentUsername;
     private ListView listView;
+    private List<PersonalMatch> personalMatchList;
+    private PersonalMatchAdapter personalMatchAdapter;
 
 
-    //private String[] locations = {"BU"};
-    //private String[] dates = {"05/06/2020"};
-    //private String[] gameTypes = {"1 on 1"};
     private String[] mTitle = {"Facebook", "Whatsapp", "Twitter", "Instagram", "Youtube"};
     private String[] mDescription = {"Facebook Description", "Whatsapp Description", "Twitter Description", "Instagram Description", "Youtube Description"};
 
@@ -50,12 +50,9 @@ public class PersonalMatchListActivity extends AppCompatActivity {
         initViews();
         initListeners();
         initObjects();
+        loadMatchInListView();
 
 
-
-        List<PersonalMatch> personalMatchList = databaseHelper.getAllPersonalMatch();
-        PersonalMatch p1 = personalMatchList.get(0);
-        Toast.makeText(this, String.valueOf(p1.getPmatchId()), Toast.LENGTH_SHORT).show();
 
     }
 
@@ -65,8 +62,8 @@ public class PersonalMatchListActivity extends AppCompatActivity {
      */
     private void initViews() {
         listView = findViewById(R.id.personalMatchListView);
-        PersonalMatchAdapter adapter = new PersonalMatchAdapter(this, mTitle, mDescription, images);
-        listView.setAdapter(adapter);
+        //PersonalMatchAdapter adapter = new PersonalMatchAdapter(this, mTitle, mDescription, images);
+        //listView.setAdapter(adapter);
     }
 
 
@@ -110,7 +107,23 @@ public class PersonalMatchListActivity extends AppCompatActivity {
         databaseHelper = new DatabaseHelper(activity);
     }
 
+    /**
+     * This method is to load the personal matches in the list view
+     */
+    public void loadMatchInListView() {
+        personalMatchList = databaseHelper.getAllPersonalMatch(); // get all the personal matches created from the database
+        personalMatchAdapter = new PersonalMatchAdapter(this, personalMatchList);
+        listView.setAdapter(personalMatchAdapter);
+        personalMatchAdapter.notifyDataSetChanged();
 
+        //PersonalMatch p1 = personalMatchList.get(0);
+        //Toast.makeText(this, String.valueOf(p1.getPmatchId()), Toast.LENGTH_SHORT).show();
+    }
+
+
+
+
+    /*
     class PersonalMatchAdapter extends ArrayAdapter<String> {
 
         Context context;
@@ -150,5 +163,5 @@ public class PersonalMatchListActivity extends AppCompatActivity {
 
             return row;
         }
-    }
+    } */
 }
