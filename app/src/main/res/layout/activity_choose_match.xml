@@ -38,5 +38,6 @@
         android:layout_marginTop="100dp"
         android:background="@drawable/button"
         android:text="@string/team_match"
-        android:textColor="@color/colorAccent" />
+        android:textColor="@color/colorAccent"
+        android:visibility="gone" />
 </RelativeLayout>

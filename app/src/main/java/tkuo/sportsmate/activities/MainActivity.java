@@ -83,6 +83,8 @@ public class MainActivity extends AppCompatActivity  {
         // Set up user's name on the navigation header
         name = navView.findViewById(R.id.nav_user_first_name);
 
+
+
     }
 
 
@@ -164,6 +166,15 @@ public class MainActivity extends AppCompatActivity  {
                 sendUserToChooseMatchActivity();
                 break;
 
+            case R.id.nav_personal_match:
+                sendUserToPersonalMatchListActivity();
+                break;
+
+                /* TODO NOT COMPLETED PART
+            case R.id.nav_team_match:
+                Toast.makeText(this, "Team Match", Toast.LENGTH_SHORT).show();
+                break;
+
             case R.id.nav_profile:
                 Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show();
                 break;
@@ -172,18 +183,11 @@ public class MainActivity extends AppCompatActivity  {
                 Toast.makeText(this, "Home", Toast.LENGTH_SHORT).show();
                 break;
 
-            case R.id.nav_personal_match:
-                sendUserToPersonalMatchListActivity();
-                Toast.makeText(this, "Personal Match", Toast.LENGTH_SHORT).show();
-                break;
-
-            case R.id.nav_team_match:
-                Toast.makeText(this, "Team Match", Toast.LENGTH_SHORT).show();
-                break;
-
             case R.id.nav_setting:
                 Toast.makeText(this, "Setting", Toast.LENGTH_SHORT).show();
                 break;
+
+                 */
 
             case R.id.nav_logout:
                 //Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show();

@@ -528,6 +528,70 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return playerList;
     }
 
+    /**
+     * This method is to fetch all personal matches created and return the list of personal matches
+     *
+     * @return list
+     */
+    public List<PersonalMatch> getAllPersonalMatch() {
+        // Array of columns to fetch
+        String[] columns = {
+                COLUMN_PERSONAL_MATCH_ID,
+                COLUMN_PERSONAL_MATCH_PLAYER_ID,
+                COLUMN_PERSONAL_MATCH_LOCATION,
+                COLUMN_PERSONAL_MATCH_DATE,
+                COLUMN_PERSONAL_MATCH_START_AT,
+                COLUMN_PERSONAL_MATCH_END_AT,
+                COLUMN_PERSONAL_MATCH_GAME_TYPE,
+                COLUMN_PERSONAL_MATCH_INIT_PLAYERS,
+                COLUMN_PERSONAL_MATCH_NUM_PLAYER_JOINED
+        };
+        // Sorting orders
+        String sortOrder =
+                COLUMN_PERSONAL_MATCH_ID + " ASC";
+
+        List<PersonalMatch> personalMatchList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Query the user table
+        /**
+         * Here query function is used to fetch records from personalMatch table this function works like we use sql query.
+         * SELECT pmatch_id, host_player_id, location, date, start_at, end_at, game_type, num_initial_players, num_players_joined FROM user ORDER BY user_first_name;
+         */
+        Cursor cursor = db.query(TABLE_PERSONAL_MATCH,
+                columns,          // columns to return
+                null,    // columns for the WHERE clause
+                null, // the values for the WHERE clause
+                null,     // group the rows
+                null,      // filter by row groups
+                sortOrder);        // the sort order
+
+        // Traversing through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                PersonalMatch personalMatch = new PersonalMatch();
+                personalMatch.setPmatchId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_PERSONAL_MATCH_ID))));
+                personalMatch.setHostPlayerId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_PERSONAL_MATCH_PLAYER_ID))));
+                personalMatch.setLocation(cursor.getString(cursor.getColumnIndex(COLUMN_PERSONAL_MATCH_LOCATION)));
+                personalMatch.setGameDate(cursor.getString(cursor.getColumnIndex(COLUMN_PERSONAL_MATCH_DATE)));
+                personalMatch.setStartAt(cursor.getString(cursor.getColumnIndex(COLUMN_PERSONAL_MATCH_START_AT)));
+                personalMatch.setEndAt(cursor.getString(cursor.getColumnIndex(COLUMN_PERSONAL_MATCH_END_AT)));
+                personalMatch.setGameType(cursor.getString(cursor.getColumnIndex(COLUMN_PERSONAL_MATCH_GAME_TYPE)));
+                personalMatch.setNumInitialPlayers(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_PERSONAL_MATCH_INIT_PLAYERS))));
+                personalMatch.setNumPlayersJoined(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_PERSONAL_MATCH_NUM_PLAYER_JOINED))));
+                // Adding user record to list
+                personalMatchList.add(personalMatch);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+
+        // Return user list
+        return personalMatchList;
+
+
+    }
+
 
 }
 

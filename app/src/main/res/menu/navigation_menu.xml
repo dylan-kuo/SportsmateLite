@@ -3,13 +3,19 @@
 
     <item
         android:id="@+id/nav_create_match"
-        android:title="Create New Match"
+        android:title="Create Match"
         android:icon="@drawable/create_match" />
 
     <item
-        android:id="@+id/nav_profile"
-        android:title="Profile"
-        android:icon="@drawable/profile_icon"/>
+        android:id="@+id/nav_personal_match"
+        android:title="Join Match"
+        android:icon="@drawable/personal_match" />
+
+    <!-- TODO NOT COMPLETED PART
+    <item
+        android:id="@+id/nav_team_match"
+        android:icon="@drawable/team_match"
+        android:title="Team Match" />
 
     <item
         android:id="@+id/nav_home"
@@ -17,19 +23,16 @@
         android:icon="@drawable/home" />
 
     <item
-        android:id="@+id/nav_personal_match"
-        android:title="Personal Match"
-        android:icon="@drawable/personal_match" />
-
-    <item
-        android:id="@+id/nav_team_match"
-        android:title="Team Match"
-        android:icon="@drawable/team_match" />
+        android:id="@+id/nav_profile"
+        android:title="Profile"
+        android:icon="@drawable/profile_icon"/>
 
     <item
         android:id="@+id/nav_setting"
         android:title="Setting"
         android:icon="@drawable/settings" />
+
+     -->
 
     <item
         android:id="@+id/nav_logout"

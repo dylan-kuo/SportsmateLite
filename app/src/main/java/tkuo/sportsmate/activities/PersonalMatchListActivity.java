@@ -3,6 +3,7 @@ package tkuo.sportsmate.activities;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,48 +17,63 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
 import tkuo.sportsmate.R;
+import tkuo.sportsmate.model.PersonalMatch;
+import tkuo.sportsmate.sql.DatabaseHelper;
 
 
 public class PersonalMatchListActivity extends AppCompatActivity {
 
     private final AppCompatActivity activity = PersonalMatchListActivity.this;
+    private DatabaseHelper databaseHelper;
     private String currentUsername;
+    private ListView listView;
 
-    /**
-     * This method is to initialize objects to be used
-     */
-    private void initObjects() {
 
-        // Receive username of current user (logged user) from MainActivity
-        Intent i = getIntent();
-        currentUsername = i.getStringExtra("current_username");
-    }
+    //private String[] locations = {"BU"};
+    //private String[] dates = {"05/06/2020"};
+    //private String[] gameTypes = {"1 on 1"};
+    private String[] mTitle = {"Facebook", "Whatsapp", "Twitter", "Instagram", "Youtube"};
+    private String[] mDescription = {"Facebook Description", "Whatsapp Description", "Twitter Description", "Instagram Description", "Youtube Description"};
 
-    ListView listView;
-    String mTitle[] = {"Facebook", "Whatsapp", "Twitter", "Instagram", "Youtube"};
-    String mDescription[] = {"Facebook Description", "Whatsapp Description", "Twitter Description", "Instagram Description", "Youtube Description"};
-    int images[] = {R.drawable.facebook, R.drawable.whatsapp, R.drawable.twitter, R.drawable.instagram, R.drawable.youtube};
-    // so our images and other things are set in array
 
-    // now paste some images in drawable
+    private int[] images = {R.drawable.pmatch_1on1, R.drawable.pmatch_2on2, R.drawable.pmatch_3on3, R.drawable.pmatch_4on4, R.drawable.pmatch_5on5};
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.personal_match_list_layout);
+        setContentView(R.layout.personal_match_list);
 
+        initViews();
+        initListeners();
         initObjects();
 
-        listView = findViewById(R.id.listView);
-        // now create an adapter class
 
-        MyAdapter adapter = new MyAdapter(this, mTitle, mDescription, images);
+
+        List<PersonalMatch> personalMatchList = databaseHelper.getAllPersonalMatch();
+        PersonalMatch p1 = personalMatchList.get(0);
+        Toast.makeText(this, String.valueOf(p1.getPmatchId()), Toast.LENGTH_SHORT).show();
+
+    }
+
+
+    /**
+     * This method is to initialize views
+     */
+    private void initViews() {
+        listView = findViewById(R.id.personalMatchListView);
+        PersonalMatchAdapter adapter = new PersonalMatchAdapter(this, mTitle, mDescription, images);
         listView.setAdapter(adapter);
-        // there is my mistake...
-        // now again check this..
+    }
 
-        // now set item click on list view
+
+    /**
+     * This method is to initialize listeners
+     */
+    private void initListeners() {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -78,18 +94,38 @@ public class PersonalMatchListActivity extends AppCompatActivity {
                 }
             }
         });
-        // so item click is done now check list view
+
     }
 
-    class MyAdapter extends ArrayAdapter<String> {
+
+    /**
+     * This method is to initialize objects to be used
+     */
+    private void initObjects() {
+
+        // Receive username of current user (logged user) from MainActivity
+        Intent i = getIntent();
+        currentUsername = i.getStringExtra("current_username");
+
+        databaseHelper = new DatabaseHelper(activity);
+    }
+
+
+    class PersonalMatchAdapter extends ArrayAdapter<String> {
 
         Context context;
+        private String[] locations;
+        private String[] dates;
+        private String[] gameTypes;
+        private String[] startTimes;
+        private String[] endTimes;
+
         String rTitle[];
         String rDescription[];
         int rImgs[];
 
-        MyAdapter (Context c, String title[], String description[], int imgs[]) {
-            super(c, R.layout.row, R.id.textView1, title);
+        PersonalMatchAdapter (Context c, String title[], String description[], int imgs[]) {
+            super(c, R.layout.row, R.id.pmatch_location, title);
             this.context = c;
             this.rTitle = title;
             this.rDescription = description;
@@ -102,9 +138,9 @@ public class PersonalMatchListActivity extends AppCompatActivity {
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View row = layoutInflater.inflate(R.layout.row, parent, false);
-            ImageView images = row.findViewById(R.id.image);
-            TextView myTitle = row.findViewById(R.id.textView1);
-            TextView myDescription = row.findViewById(R.id.textView2);
+            ImageView images = row.findViewById(R.id.pmatch_image);
+            TextView myTitle = row.findViewById(R.id.pmatch_location);
+            TextView myDescription = row.findViewById(R.id.pmatch_address);
 
             // now set our resources on views
             images.setImageResource(rImgs[position]);

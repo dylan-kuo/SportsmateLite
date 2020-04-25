@@ -30,7 +30,9 @@ public class ChooseMatchActivity extends AppCompatActivity {
      */
     private void initViews() {
         personalMatchButton = (Button)findViewById(R.id.choose_personal_match);
-        teamMatchButton =(Button)findViewById(R.id.choose_team_match);
+
+        // NOT COMPLETED PART
+        //teamMatchButton =(Button)findViewById(R.id.choose_team_match);
     }
 
 
