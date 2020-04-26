@@ -23,8 +23,9 @@ public class JoinPersonalMatchActivity extends AppCompatActivity {
     private PersonalMatch selected_personal_match;
     private String currentUsername;
     private Button joinButton, cancelButton;
-    private TextView pop_location, pop_address, pop_date, pop_time, pop_game_type, pop_num_people_going;
+    private TextView pop_location, pop_address, pop_date, pop_time, pop_game_type, pop_num_people_going, pop_warning;
     private ImageView gameTypeImage;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,7 @@ public class JoinPersonalMatchActivity extends AppCompatActivity {
         pop_time = (TextView) findViewById(R.id.personal_pop_game_time);
         pop_game_type = (TextView) findViewById(R.id.personal_pop_game_type);
         pop_num_people_going = (TextView) findViewById(R.id.personal_pop_people_going);
+        pop_warning = (TextView) findViewById(R.id.personal_pop_warning);
 
         joinButton = (Button) findViewById(R.id.personal_pop_join);
         cancelButton = (Button) findViewById(R.id.personal_pop_cancel);
@@ -81,7 +83,6 @@ public class JoinPersonalMatchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 joinPersonalMatch();
-                finish();
             }
         });
         // click cancel to finish this activity.
@@ -206,8 +207,35 @@ public class JoinPersonalMatchActivity extends AppCompatActivity {
      * This method is to handel with tasks needed to do if one joins a match
      */
     public void joinPersonalMatch() {
-        updatePersonalMatchTable();
-        insertToPersonalMatchPlayersTable();
+
+        if(joinedTheMatch(currentUsername) == true) { // If the player has already joined the match. Show the warning message
+            pop_warning.setVisibility(View.VISIBLE);
+        } else {  // If not, go ahead the database task
+            updatePersonalMatchTable();
+            insertToPersonalMatchPlayersTable();
+
+            // Note: Close the popup window
+            finish();
+        }
+
+    }
+
+
+    /**
+     * This method is to check if the logged user has already joined the selected match
+     * @param username: logged user's username
+     * @return true if the user has already joined the match, false otherwise
+     */
+    public Boolean joinedTheMatch(String username) {
+
+        // get 'player' from 'currentUserName' of logged user
+        Player player = databaseHelper.getSinglePlayer(currentUsername).get(0);
+
+        if(databaseHelper.checkPersonalMatchPlayers(player, selected_personal_match) == true) {
+            return true;
+        }
+
+        return false;
     }
 
 

@@ -836,6 +836,57 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
+    /**
+     * This method to check if the player already created a data with specified match_id in personal_match_players
+     *
+     * @param player
+     * @param personalMatch
+     * @return true/false : true if the specified player has already joined a specified personal match, false otherwise.
+     */
+    public boolean checkPersonalMatchPlayers(Player player, PersonalMatch personalMatch) {
+
+        long pid = player.getPlayerId();
+        long pmatch_id = personalMatch.getPmatchId();
+
+        // Array of columns to fetch
+        String[] columns = {
+                COLUMN_PERSONAL_MATCH_PLAYERS_MATCH_ID, COLUMN_PERSONAL_MATCH_PLAYERS_PLAYER_ID
+        };
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Selection criteria
+        String selection = COLUMN_PERSONAL_MATCH_PLAYERS_PLAYER_ID + " = ?" + " AND " +
+                COLUMN_PERSONAL_MATCH_PLAYERS_MATCH_ID+ " = ?";
+
+        // Selection arguments
+        String[] selectionArgs = {Long.toString(pid), Long.toString(pmatch_id)};
+
+        // Query user table with conditions
+        /**
+         * Here query function is used to fetch records from user table this function works like we use sql query.
+         * SQL query equivalent to this query function is
+         * SELECT match_id, p_id FROM personal_match_players WHERE match_id = {match_id} AND p_id = {p_id};
+         */
+        Cursor cursor = db.query(TABLE_PERSONAL_MATCH_PLAYERS, //Table to query
+                columns,                     // columns to return
+                selection,                    // columns for the WHERE clause
+                selectionArgs,                 // the values for the WHERE clause
+                null,                  //  group the rows
+                null,                   //filter by row groups
+                null);                  //The sort order
+
+        int cursorCount = cursor.getCount();
+
+        cursor.close();
+        db.close();
+        if (cursorCount > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+
 }
 
 

@@ -120,6 +120,17 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/personal_pop_warning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:text="You've already joined this match"
+            android:visibility="invisible"
+            android:textColor="@color/logoRed" />
+
     </LinearLayout>
 
 </RelativeLayout>
