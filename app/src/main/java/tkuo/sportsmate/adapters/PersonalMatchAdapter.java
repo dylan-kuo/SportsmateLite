@@ -37,7 +37,7 @@ public class PersonalMatchAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return list.get(position);
+        return list.get(position);  // returns list item at the specified position
     }
 
 
@@ -138,7 +138,7 @@ public class PersonalMatchAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return this.list.size();
+        return this.list.size();  // returns total of items in the list
     }
 
 

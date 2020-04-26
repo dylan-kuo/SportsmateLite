@@ -1,4 +1,5 @@
 package tkuo.sportsmate.sql;
+import android.app.Person;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -6,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import tkuo.sportsmate.model.PersonalMatch;
+import tkuo.sportsmate.model.PersonalMatchPlayers;
 import tkuo.sportsmate.model.Player;
 import tkuo.sportsmate.model.User;
 
@@ -140,6 +142,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Drop Personal Match Table if exists
         db.execSQL(DROP_PERSONAL_MATCH_TABLE);
         // Drop Personal Match Player Table if exists
+        db.execSQL(DROP_PERSONAL_MATCH_PLAYER_TABLE);
 
         // Create tables again
         onCreate(db);
@@ -168,13 +171,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         addPlayer(insertedUserId);
     }
 
-
+    /**
+     * This method is to add player record
+     *
+     * @param userId
+     */
     public void addPlayer(long userId) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(COLUMN_PLAYER_USER_ID, userId);
         db.insert(TABLE_PLAYER, null, values);
+        db.close();
+    }
+
+
+    /**
+     * This method is to add personal_match_player record
+     *
+     * @param player, personalMatch
+     */
+    public void addPersonalMatchPlayer(Player player, PersonalMatch personalMatch) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PERSONAL_MATCH_PLAYERS_MATCH_ID, personalMatch.getPmatchId());
+        values.put(COLUMN_PERSONAL_MATCH_PLAYERS_PLAYER_ID, player.getPlayerId());
         db.close();
     }
 
@@ -224,7 +246,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Inserting Row
         db.insert(TABLE_PERSONAL_MATCH, null, values);
         db.close();
-
     }
 
 
@@ -528,6 +549,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return playerList;
     }
 
+
+    /**
+     * This method to update player record
+     *
+     * @param player
+     */
+    public void updatePlayer(Player player) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PLAYER_USER_ID, player.getPlayerId());
+
+        // Updating row
+        db.update(TABLE_PLAYER, values, COLUMN_PLAYER_PLAYER_ID+ " = ?",
+                new String[]{String.valueOf(player.getUserId())});
+        db.close();
+    }
+
+
+    /**
+     * This method is to delete player record
+     *
+     * @param player
+     */
+    public void deletePlayer (Player player) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        // Delete player record by id
+        db.delete(TABLE_PLAYER, COLUMN_PLAYER_PLAYER_ID + " = ?",
+                new String[]{String.valueOf(player.getPlayerId())});
+        db.close();
+    }
+
+
     /**
      * This method is to fetch all personal matches created and return the list of personal matches
      *
@@ -548,7 +602,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         };
         // Sorting orders
         String sortOrder =
-                COLUMN_PERSONAL_MATCH_ID + " ASC";
+                //COLUMN_PERSONAL_MATCH_ID + " DESC";
+                COLUMN_PERSONAL_MATCH_DATE + " ASC, " + COLUMN_PERSONAL_MATCH_START_AT + " ASC";
 
         List<PersonalMatch> personalMatchList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -588,8 +643,64 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // Return user list
         return personalMatchList;
+    }
 
 
+    /**
+     * This method to update personal_match record
+     *
+     * @param personalMatch
+     */
+    public void updatePersonalMatch(PersonalMatch personalMatch) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PERSONAL_MATCH_PLAYER_ID, personalMatch.getHostPlayerId());
+        values.put(COLUMN_PERSONAL_MATCH_LOCATION, personalMatch.getLocation());
+        values.put(COLUMN_PERSONAL_MATCH_DATE, personalMatch.getGameDate());
+        values.put(COLUMN_PERSONAL_MATCH_START_AT, personalMatch.getStartAt());
+        values.put(COLUMN_PERSONAL_MATCH_END_AT, personalMatch.getEndAt());
+        values.put(COLUMN_PERSONAL_MATCH_GAME_TYPE, personalMatch.getGameType());
+        values.put(COLUMN_PERSONAL_MATCH_INIT_PLAYERS, personalMatch.getNumInitialPlayers());
+        values.put(COLUMN_PERSONAL_MATCH_NUM_PLAYER_JOINED, personalMatch.getNumPlayersJoined());
+
+        // Updating row
+        db.update(TABLE_PERSONAL_MATCH, values, COLUMN_PERSONAL_MATCH_PLAYER_ID + " = ?",
+                new String[]{String.valueOf(personalMatch.getPmatchId())});
+        db.close();
+    }
+
+
+    /**
+     * This method is to delete personal_match record
+     *
+     * @param personalMatch
+     */
+    public void deletePersonalMatch (PersonalMatch personalMatch) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Delete personal_match record by id
+        db.delete(TABLE_PERSONAL_MATCH, COLUMN_PERSONAL_MATCH_ID + " = ?",
+                new String[]{String.valueOf(personalMatch.getPmatchId())});
+        db.close();
+    }
+
+
+    /**
+     * This method is to delete personal_match_player record
+     *
+     * @param personalMatchPlayers
+     */
+    public void deletePersonalMatchPlayer (PersonalMatchPlayers personalMatchPlayers) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Delete personal_match_player record by match_id and p_id
+        db.delete(TABLE_PERSONAL_MATCH_PLAYERS,
+                COLUMN_PERSONAL_MATCH_PLAYERS_MATCH_ID + " = ? AND " +
+                        COLUMN_PERSONAL_MATCH_PLAYERS_PLAYER_ID + " = ?",
+                new String[]{String.valueOf(personalMatchPlayers.getMatchId()),
+                String.valueOf(personalMatchPlayers.getPid())});
+        db.close();
     }
 
 
