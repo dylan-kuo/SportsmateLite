@@ -5,7 +5,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
@@ -14,6 +13,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,9 +31,9 @@ public class MainActivity extends AppCompatActivity  {
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
-    private RecyclerView postList;
+    private ImageView imageCreatePersonalMatch, imageJoinPersonalMatch;
     private CircleImageView headerProfileImage;
-    private TextView name;
+    private TextView name, welcomeName;
     private Toolbar mToolbar;
     private User currentUser;
     private DatabaseHelper databaseHelper;
@@ -39,7 +41,7 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main2);
 
         initViews();
         initObjects();
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity  {
         // Set up main page toolbar
         mToolbar = (Toolbar) findViewById((R.id.main_page_toolbar));
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("Home");
+        //getSupportActionBar().setTitle("Home");
 
         // Set up the toggle navigation
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -83,8 +85,26 @@ public class MainActivity extends AppCompatActivity  {
         // Set up user's name on the navigation header
         name = navView.findViewById(R.id.nav_user_first_name);
 
+        // set up user's name on the welcome banner
+        welcomeName = (TextView) findViewById(R.id.main_welcome_name);
 
 
+        // Set up onClick listeners to ImageViews
+        imageCreatePersonalMatch = (ImageView) findViewById(R.id.main_create_personal_match);
+        imageCreatePersonalMatch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendUserToChooseMatchActivity();
+            }
+        });
+
+        imageJoinPersonalMatch = (ImageView) findViewById(R.id.main_join_personal_match);
+        imageJoinPersonalMatch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendUserToPersonalMatchListActivity();
+            }
+        });
     }
 
 
@@ -124,6 +144,9 @@ public class MainActivity extends AppCompatActivity  {
             }
             // set up navigation header user's name
             name.setText(currentUser.getFirstName()+ " " + currentUser.getLastName());
+
+            // set up user's first name in the welcome banner
+            welcomeName.setText("Hello " + currentUser.getFirstName());
         }
     }
 

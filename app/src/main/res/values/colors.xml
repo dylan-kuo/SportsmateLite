@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#F2B552</color>
-    <color name="colorPrimaryDark">#e67225</color>
+    <color name="colorPrimary2">#e67225</color>
     <color name="colorAccent">#E9EBEE</color>
     <color name="lightBlue">#66CCFF</color>
     <color name="lightOrange">#EE825F</color>
+    <color name="lightBlue2">#4B99EE</color>
+    <color name="lightBlue3">#03368B</color>
     <color name="backgroundColor">#F5F5F5</color>
     <color name="logoRed">#EF534F</color>
+    <color name="topBlue">#031A47</color>
 </resources>

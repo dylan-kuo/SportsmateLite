@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundColor"
+    android:background="@drawable/bgapps"
     tools:context=".activities.LoginActivity">
 
 
     <ImageView
         android:id="@+id/login_icon"
         android:layout_width="300dp"
-        android:layout_height="240dp"
+        android:layout_height="260dp"
         android:layout_centerHorizontal="true"
         android:contentDescription="TODO"
         app:srcCompat="@drawable/logo" />

@@ -1,11 +1,5 @@
 package tkuo.sportsmate.activities;
-import tkuo.sportsmate.R;
-import tkuo.sportsmate.model.PersonalMatch;
-import tkuo.sportsmate.model.Player;
-import tkuo.sportsmate.sql.DatabaseHelper;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -15,7 +9,13 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import tkuo.sportsmate.R;
+import tkuo.sportsmate.model.PersonalMatch;
+import tkuo.sportsmate.model.Player;
+import tkuo.sportsmate.sql.DatabaseHelper;
+
+
 
 public class JoinPersonalMatchActivity extends AppCompatActivity {
     private final AppCompatActivity activity = JoinPersonalMatchActivity.this;

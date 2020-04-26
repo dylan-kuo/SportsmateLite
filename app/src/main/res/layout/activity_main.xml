@@ -17,17 +17,27 @@
             layout="@layout/app_bar_layout">
         </include>
 
+        <ImageView
+            android:id="@+id/main_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:layout_below="@+id/main_page_toolbar"
+            app:srcCompat="@drawable/logo_median" />
+
+
         <FrameLayout
             android:id="@+id/main_container"
             android:layout_width="match_parent"
-            android:layout_height="676dp"
-            android:layout_below="@+id/main_page_toolbar"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/main_logo"
             android:layout_marginTop="-1dp">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/all_users_post_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
+
+
         </FrameLayout>
 
     </RelativeLayout>
