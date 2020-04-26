@@ -10,7 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activities.JoinPersonalMatchActivity"
-            android:theme="@style/AppTheme.PopMe"/>
+            android:theme="@style/AppTheme.PopMe"
+            android:launchMode = "singleTop" />
         <activity android:name=".activities.CreatePersonalMatchActivity" />
         <activity android:name=".activities.PersonalMatchListActivity" />
         <activity android:name=".activities.LoginActivity" />

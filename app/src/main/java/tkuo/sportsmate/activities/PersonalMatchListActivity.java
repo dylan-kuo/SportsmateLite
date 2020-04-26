@@ -60,6 +60,7 @@ public class PersonalMatchListActivity extends AppCompatActivity {
                 startActivity(joinMatchIntent);
 
             }
+
         });
 
     }

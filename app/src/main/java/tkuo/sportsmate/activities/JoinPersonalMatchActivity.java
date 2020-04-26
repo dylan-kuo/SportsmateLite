@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class JoinPersonalMatchActivity extends AppCompatActivity {
     private final AppCompatActivity activity = JoinPersonalMatchActivity.this;
@@ -65,7 +66,8 @@ public class JoinPersonalMatchActivity extends AppCompatActivity {
         // Receive personal_match object and logged user's username from PersonalMatchList activity
         Intent i = getIntent();
         selected_personal_match = i.getParcelableExtra("selected_personal_match_obj"); // selected personal match
-        //currentUsername = i.getStringExtra("current_username"); // logged user's username
+        currentUsername = i.getStringExtra("current_username"); // logged user's username
+
     }
 
 
@@ -73,13 +75,14 @@ public class JoinPersonalMatchActivity extends AppCompatActivity {
      * This method is to initialize listeners
      */
     private void initListeners() {
+        // click join to join the match
         joinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 joinPersonalMatch();
             }
         });
-
+        // click cancel to finish this activity.
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -201,5 +204,15 @@ public class JoinPersonalMatchActivity extends AppCompatActivity {
     public void joinPersonalMatch() {
 
     }
+
+    public void updatePersonalMatchTable() {
+
+    }
+
+    public void insertToPersonalMatchPlayersTable() {
+
+    }
+
+
 
 }
