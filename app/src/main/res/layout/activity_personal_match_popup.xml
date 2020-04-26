@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="10dp"
+
+
+    android:background="@drawable/pop_background"
+    tools:context=".activities.JoinPersonalMatchActivity">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+
+        <ImageView
+            android:id="@+id/personal_pop_image"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:src="@mipmap/ic_launcher" />
+
+        <TextView
+            android:id="@+id/personal_pop_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:drawableLeft="@drawable/basketball_black_18dp"
+            android:drawablePadding="5dip"
+            android:text="Location" />
+
+        <TextView
+            android:id="@+id/personal_pop_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:drawableLeft="@drawable/place_black_18dp"
+            android:drawablePadding="5dip"
+            android:text="Address" />
+
+        <TextView
+            android:id="@+id/personal_pop_game_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:drawableLeft="@drawable/date__black_18dp"
+            android:drawablePadding="5dip"
+            android:text="Date" />
+
+        <TextView
+            android:id="@+id/personal_pop_game_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:drawableLeft="@drawable/clock_black_18dp"
+            android:drawablePadding="5dip"
+            android:text="Time" />
+
+        <TextView
+            android:id="@+id/personal_pop_game_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:drawableLeft="@drawable/game_type_black_18dp"
+            android:drawablePadding="5dip"
+            android:text="Game Type" />
+
+        <TextView
+            android:id="@+id/personal_pop_people_going"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:drawableLeft="@drawable/person_add_black_18dp"
+            android:drawablePadding="5dip"
+            android:text="Number of people going" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_marginTop="40dp"
+            android:layout_height="50dp">
+
+            <Button
+                android:id="@+id/personal_pop_join"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/button2"
+                android:text="Join"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/personal_pop_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/button2"
+                android:text="cancel"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp"
+                android:layout_marginLeft="20dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

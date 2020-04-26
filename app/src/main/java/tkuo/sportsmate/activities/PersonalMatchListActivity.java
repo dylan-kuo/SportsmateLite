@@ -27,7 +27,7 @@ public class PersonalMatchListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.personal_match_list);
+        setContentView(R.layout.activity_personal_match_list);
 
         initViews();
         initListeners();
@@ -53,7 +53,11 @@ public class PersonalMatchListActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 PersonalMatch selectedMatch = (PersonalMatch) personalMatchAdapter.getItem(position);  // get the selected match object
-                Toast.makeText(PersonalMatchListActivity.this, "pmatch_id: " + selectedMatch.getPmatchId(), Toast.LENGTH_SHORT).show();
+
+                Intent joinMatchIntent = new Intent(PersonalMatchListActivity.this, JoinPersonalMatchActivity.class);
+                joinMatchIntent.putExtra("selected_personal_match_obj", selectedMatch);  // Pass personal_match object
+                joinMatchIntent.putExtra("current_username", currentUsername);
+                startActivity(joinMatchIntent);
 
             }
         });

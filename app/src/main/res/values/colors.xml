@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#e67225</color>
     <color name="colorAccent">#E9EBEE</color>
     <color name="lightBlue">#66CCFF</color>
+    <color name="lightOrange">#EE825F</color>
     <color name="backgroundColor">#F5F5F5</color>
     <color name="logoRed">#EF534F</color>
 </resources>

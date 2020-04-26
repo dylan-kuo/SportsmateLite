@@ -1,25 +1,17 @@
 package tkuo.sportsmate.adapters;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import tkuo.sportsmate.R;
 import tkuo.sportsmate.model.PersonalMatch;
+
 
 public class PersonalMatchAdapter extends BaseAdapter {
     private Context context;
@@ -98,9 +90,9 @@ public class PersonalMatchAdapter extends BaseAdapter {
                 personalMatch.getNumPlayersJoined();
         String strNumPeopleGoing;
         if(numPeopleGoing == 1) {
-            strNumPeopleGoing = String.valueOf(numPeopleGoing) + " person is going";
+            strNumPeopleGoing = numPeopleGoing + " person is going";
         } else {
-            strNumPeopleGoing = String.valueOf(numPeopleGoing) + " people are going";
+            strNumPeopleGoing = numPeopleGoing + " people are going";
         }
         textViewPeopleGoing.setText(strNumPeopleGoing);
 
@@ -140,9 +132,5 @@ public class PersonalMatchAdapter extends BaseAdapter {
     public int getCount() {
         return this.list.size();  // returns total of items in the list
     }
-
-
-
-
 
 }
