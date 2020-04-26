@@ -197,6 +197,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_PERSONAL_MATCH_PLAYERS_MATCH_ID, personalMatch.getPmatchId());
         values.put(COLUMN_PERSONAL_MATCH_PLAYERS_PLAYER_ID, player.getPlayerId());
+        db.insert(TABLE_PERSONAL_MATCH_PLAYERS, null, values);
         db.close();
     }
 
@@ -550,6 +551,69 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
+
+    /**
+     * This method is to fetch the user info and return the all the player records
+     * @param userName
+     * @return list
+     */
+    public List<Player> getSinglePlayer(String userName) {
+
+        // Get user's id in user table using userName passed
+        User user = getSingleUser(userName).get(0);
+        // Get user_id from this user
+        Long user_id = user.getId();
+
+
+        // Array of columns to fetch
+        String[] columns = {
+                COLUMN_PLAYER_PLAYER_ID,
+                COLUMN_PLAYER_USER_ID
+        };
+
+        // Selection criteria
+        String selection = COLUMN_PLAYER_USER_ID + " = ?";
+
+        // Selection argument
+        String[] selectionArgs = {Long.toString(user_id)};
+
+        List<Player> playerList = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Query the user table
+        /**
+         * Here query function is used to fetch records from player table this function works like we use sql query.
+         * SQL query equivalent to this query function is
+         * SELECT player_id, user_id FROM player WHERE user_id = 2;
+         */
+        Cursor cursor = db.query(TABLE_PLAYER,
+                columns,          // columns to return
+                selection,    // columns for the WHERE clause
+                selectionArgs, // the values for the WHERE clause
+                null,     // group the rows
+                null,      // filter by row groups
+                null);        // the sort order
+
+        // Traversing through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Player player = new Player();
+                player.setPlayerId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_PLAYER_PLAYER_ID))));
+                player.setUserId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_PLAYER_USER_ID))));
+                // Adding user record to list
+                playerList.add(player);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+
+        // Return player list
+        return playerList;
+    }
+
+
+
     /**
      * This method to update player record
      *
@@ -644,6 +708,74 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Return user list
         return personalMatchList;
     }
+
+
+
+    /**
+     * This method is to fetch all personal matches created and return the list of personal matches
+     *
+     * @return list
+     */
+    public List<PersonalMatch> getSinglePersonalMatch(long host_player_id) {
+        // Array of columns to fetch
+        String[] columns = {
+                COLUMN_PERSONAL_MATCH_ID,
+                COLUMN_PERSONAL_MATCH_PLAYER_ID,
+                COLUMN_PERSONAL_MATCH_LOCATION,
+                COLUMN_PERSONAL_MATCH_DATE,
+                COLUMN_PERSONAL_MATCH_START_AT,
+                COLUMN_PERSONAL_MATCH_END_AT,
+                COLUMN_PERSONAL_MATCH_GAME_TYPE,
+                COLUMN_PERSONAL_MATCH_INIT_PLAYERS,
+                COLUMN_PERSONAL_MATCH_NUM_PLAYER_JOINED
+        };
+
+        // Selection criteria
+        String selection = COLUMN_PERSONAL_MATCH_PLAYER_ID + " = ?";
+
+        // Selection argument
+        String[] selectionArgs = {Long.toString(host_player_id)};
+
+        List<PersonalMatch> personalMatchList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Query the user table
+        /**
+         * Here query function is used to fetch records from personalMatch table this function works like we use sql query.
+         * SELECT pmatch_id, host_player_id, location, date, start_at, end_at, game_type, num_initial_players, num_players_joined FROM user ORDER BY user_first_name;
+         */
+        Cursor cursor = db.query(TABLE_PERSONAL_MATCH,
+                columns,          // columns to return
+                selection,    // columns for the WHERE clause
+                selectionArgs, // the values for the WHERE clause
+                null,     // group the rows
+                null,      // filter by row groups
+                null);        // the sort order
+
+        // Traversing through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                PersonalMatch personalMatch = new PersonalMatch();
+                personalMatch.setPmatchId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_PERSONAL_MATCH_ID))));
+                personalMatch.setHostPlayerId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_PERSONAL_MATCH_PLAYER_ID))));
+                personalMatch.setLocation(cursor.getString(cursor.getColumnIndex(COLUMN_PERSONAL_MATCH_LOCATION)));
+                personalMatch.setGameDate(cursor.getString(cursor.getColumnIndex(COLUMN_PERSONAL_MATCH_DATE)));
+                personalMatch.setStartAt(cursor.getString(cursor.getColumnIndex(COLUMN_PERSONAL_MATCH_START_AT)));
+                personalMatch.setEndAt(cursor.getString(cursor.getColumnIndex(COLUMN_PERSONAL_MATCH_END_AT)));
+                personalMatch.setGameType(cursor.getString(cursor.getColumnIndex(COLUMN_PERSONAL_MATCH_GAME_TYPE)));
+                personalMatch.setNumInitialPlayers(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_PERSONAL_MATCH_INIT_PLAYERS))));
+                personalMatch.setNumPlayersJoined(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_PERSONAL_MATCH_NUM_PLAYER_JOINED))));
+                // Adding user record to list
+                personalMatchList.add(personalMatch);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+
+        // Return user list
+        return personalMatchList;
+    }
+
 
 
     /**

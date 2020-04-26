@@ -58,11 +58,8 @@ public class PersonalMatchListActivity extends AppCompatActivity {
                 joinMatchIntent.putExtra("selected_personal_match_obj", selectedMatch);  // Pass personal_match object
                 joinMatchIntent.putExtra("current_username", currentUsername);
                 startActivity(joinMatchIntent);
-
             }
-
         });
-
     }
 
 

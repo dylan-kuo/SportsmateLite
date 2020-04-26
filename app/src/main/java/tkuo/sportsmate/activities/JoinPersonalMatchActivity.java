@@ -1,6 +1,7 @@
 package tkuo.sportsmate.activities;
 import tkuo.sportsmate.R;
 import tkuo.sportsmate.model.PersonalMatch;
+import tkuo.sportsmate.model.Player;
 import tkuo.sportsmate.sql.DatabaseHelper;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -80,6 +81,7 @@ public class JoinPersonalMatchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 joinPersonalMatch();
+                finish();
             }
         });
         // click cancel to finish this activity.
@@ -179,7 +181,6 @@ public class JoinPersonalMatchActivity extends AppCompatActivity {
     }
 
 
-
     /**
      * This method is to initialize the pop-up window
      */
@@ -201,18 +202,40 @@ public class JoinPersonalMatchActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * This method is to handel with tasks needed to do if one joins a match
+     */
     public void joinPersonalMatch() {
-
+        updatePersonalMatchTable();
+        insertToPersonalMatchPlayersTable();
     }
 
+
+    /**
+     * This method is to update data in personal_match table
+     */
     public void updatePersonalMatchTable() {
+        // get num of players joined
+        int original_num_players_joined = selected_personal_match.getNumPlayersJoined();
+
+        // add one to num_players_joined in personal_match table
+        selected_personal_match.setNumPlayersJoined(original_num_players_joined + 1);
+
+        // update the personal_match table
+        databaseHelper.updatePersonalMatch(selected_personal_match);
 
     }
 
+
+    /**
+     * This method is to insert newly created data to personal_match_player table
+     */
     public void insertToPersonalMatchPlayersTable() {
+        // get 'player' from 'currentUserName' of logged user
+        Player player = databaseHelper.getSinglePlayer(currentUsername).get(0);
 
+        // Insert to personal_match_player table
+        databaseHelper.addPersonalMatchPlayer(player, selected_personal_match);
     }
-
-
 
 }

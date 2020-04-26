@@ -1,5 +1,6 @@
 package tkuo.sportsmate.activities;
 
+import android.app.Person;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -44,12 +45,18 @@ public class CreatePersonalMatchActivity extends AppCompatActivity {
     private String timeSelected;
     private Calendar calendar;
 
+    private String str_location;
+    private String str_date;
+    private String str_startTime;
+    private String str_endTime;
+    private String str_gameType;
+    private String numOfInitPlayer;
+
     private InputValidation inputValidation;
     private DatabaseHelper databaseHelper;
     private PersonalMatch newPersonalMatch;
     private String currentUsername;
     private User currentUser;
-
 
 
     @Override
@@ -207,12 +214,12 @@ public class CreatePersonalMatchActivity extends AppCompatActivity {
     private void savePersonalMatchInformation() {
 
         // Strings of input
-        String str_location = location.getSelectedItem().toString();
-        String str_date = date.getText().toString();
-        String str_startTime = startTime.getText().toString();
-        String str_endTime = endTime.getText().toString();
-        String str_gameType = matchType.getSelectedItem().toString();
-        String numOfInitPlayer = numberOfPlayer.getText().toString().trim();
+        str_location = location.getSelectedItem().toString();
+        str_date = date.getText().toString();
+        str_startTime = startTime.getText().toString();
+        str_endTime = endTime.getText().toString();
+        str_gameType = matchType.getSelectedItem().toString();
+        numOfInitPlayer = numberOfPlayer.getText().toString().trim();
 
 
 
@@ -273,37 +280,62 @@ public class CreatePersonalMatchActivity extends AppCompatActivity {
         }
 
         else {
-
-            // Get the User object from SQLite db based on the given username
-            currentUser = databaseHelper.getSingleUser(currentUsername).get(0);
-            long userId = currentUser.getId(); // Get the user id in the user table
-
-            // Get player object from SQLite db based on the user id in User Table
-            // Relationship:  user.id (User Table) = player.user_id (Player Table)
-
-            Player player = databaseHelper.getSinglePlayer(userId).get(0);
-            Long playerId = player.getPlayerId();
-
-            newPersonalMatch.setHostPlayerId(playerId);
-            newPersonalMatch.setLocation(str_location);
-            newPersonalMatch.setGameDate(str_date);
-            newPersonalMatch.setStartAt(str_startTime);
-            newPersonalMatch.setEndAt(str_endTime);
-            newPersonalMatch.setGameType(str_gameType);
-            newPersonalMatch.setNumInitialPlayers(Integer.parseInt(numOfInitPlayer));
-
-            // Post data to personal_match table in the SQLite db
-            databaseHelper.addPersonalMatch(newPersonalMatch);
-
-            // Go back to main activity
+            insertToPersonalMatchTable();
+            insertToPersonalMatchPlayerTable();
             sendUserToMainActivity();
-
         }
     }
 
 
+    /**
+     * This method is to insert newly created data to personal_match table
+     */
+    private void insertToPersonalMatchTable() {
 
-    // Switch to Main Activity and clear any other activities on top of it
+        // Get the User object from SQLite db based on the given username
+        currentUser = databaseHelper.getSingleUser(currentUsername).get(0);
+        long userId = currentUser.getId(); // Get the user id in the user table
+
+        // Get player object from SQLite db based on the user id in User Table
+        // Relationship:  user.id (User Table) = player.user_id (Player Table)
+
+        Player player = databaseHelper.getSinglePlayer(userId).get(0);
+        Long playerId = player.getPlayerId();
+
+        newPersonalMatch.setHostPlayerId(playerId);
+        newPersonalMatch.setLocation(str_location);
+        newPersonalMatch.setGameDate(str_date);
+        newPersonalMatch.setStartAt(str_startTime);
+        newPersonalMatch.setEndAt(str_endTime);
+        newPersonalMatch.setGameType(str_gameType);
+        newPersonalMatch.setNumInitialPlayers(Integer.parseInt(numOfInitPlayer));
+
+        // Post data to personal_match table in the SQLite db
+        databaseHelper.addPersonalMatch(newPersonalMatch);
+    }
+
+
+    /**
+     * This method is to insert newly created data to personal_match_player table
+     */
+    private void insertToPersonalMatchPlayerTable() {
+        // We get the player data by using (logged) current user's userId
+        long userId = currentUser.getId();
+        Player player = databaseHelper.getSinglePlayer(userId).get(0);
+
+        // Because we don't have pmatch_id on hand(it is created automatically by database), so
+        // we need to get the data from database again. see below:
+        PersonalMatch personalMatch = databaseHelper.getSinglePersonalMatch(player.getPlayerId()).get(0);
+
+        // Insert to personal_match_player table
+        databaseHelper.addPersonalMatchPlayer(player, personalMatch);
+    }
+
+
+
+    /**
+     * This method is to send the user to main activity
+     */
     private void sendUserToMainActivity() {
         Intent mainIntent = new Intent(CreatePersonalMatchActivity.this, MainActivity.class);
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);  // Do this to prevent user from going back to Register activity unless clicking logout
