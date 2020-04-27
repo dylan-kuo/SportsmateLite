@@ -9,6 +9,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import tkuo.sportsmate.R;
 import tkuo.sportsmate.model.PersonalMatch;
@@ -213,6 +214,7 @@ public class JoinPersonalMatchActivity extends AppCompatActivity {
         } else {  // If not, go ahead the database task
             updatePersonalMatchTable();
             insertToPersonalMatchPlayersTable();
+            Toast.makeText(this, "Successfully joined the match", Toast.LENGTH_SHORT).show();
 
             // Note: Close the popup window
             finish();
