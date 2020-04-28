@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity  {
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
-    private ImageView imageCreatePersonalMatch, imageJoinPersonalMatch;
+    private ImageView imageCreatePersonalMatch, imageJoinPersonalMatch, imageJoinedPersonalMatchList;
     private CircleImageView headerProfileImage;
     private TextView name, welcomeName;
     private Toolbar mToolbar;
@@ -46,6 +46,32 @@ public class MainActivity extends AppCompatActivity  {
         initViews();
         initObjects();
     }
+
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+
+        // Check if user is authorized or not. If not, send it to login page
+        if(currentUser == null) {
+            sendUserToLoginActivity();
+        }
+
+        else {
+            // Set up navigation header picture
+            if (currentUser.getImageUri() != null) {
+                Glide.with(this).load(currentUser.getImageUri()).into(headerProfileImage);
+            }
+            // set up navigation header user's name
+            name.setText(currentUser.getFirstName()+ " " + currentUser.getLastName());
+
+            // set up user's first name in the welcome banner
+            welcomeName.setText("Hello " + currentUser.getFirstName());
+        }
+    }
+
 
 
     /**
@@ -105,6 +131,15 @@ public class MainActivity extends AppCompatActivity  {
                 sendUserToPersonalMatchListActivity();
             }
         });
+
+        imageJoinedPersonalMatchList = (ImageView) findViewById(R.id.main_joined_personal_match);
+        imageJoinedPersonalMatchList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendUserToJoinedPersonalMatchListActivity();
+            }
+        });
+
     }
 
 
@@ -124,41 +159,6 @@ public class MainActivity extends AppCompatActivity  {
         //Intent i = getIntent();
         //currentUser = (User) i.getSerializableExtra("current_user_obj");
 
-    }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-
-        // Check if user is authorized or not. If not, send it to login page
-        if(currentUser == null) {
-            sendUserToLoginActivity();
-        }
-
-        else {
-            // Set up navigation header picture
-            if (currentUser.getImageUri() != null) {
-                Glide.with(this).load(currentUser.getImageUri()).into(headerProfileImage);
-            }
-            // set up navigation header user's name
-            name.setText(currentUser.getFirstName()+ " " + currentUser.getLastName());
-
-            // set up user's first name in the welcome banner
-            welcomeName.setText("Hello " + currentUser.getFirstName());
-        }
-    }
-
-    /**
-     * This method is to switch to Login Activity and clear any other activities on top of it
-     *
-     */
-    private void sendUserToLoginActivity() {
-        Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
-        loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(loginIntent);
-        finish();
     }
 
 
@@ -220,6 +220,18 @@ public class MainActivity extends AppCompatActivity  {
     }
 
 
+    /**
+     * This method is to switch to Login Activity and clear any other activities on top of it
+     *
+     */
+    private void sendUserToLoginActivity() {
+        Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+        loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(loginIntent);
+        finish();
+    }
+
+
 
     /**
      * This method is to switch to ChooseMatchActivity
@@ -245,6 +257,21 @@ public class MainActivity extends AppCompatActivity  {
         startActivity(personalMatchListIntent);
         //finish();
     }
+
+
+    /**
+     * This method is to switch to MyPersonalMatchListActivity (To see the list of personal matches joined/created)
+     *
+     */
+    private void sendUserToJoinedPersonalMatchListActivity(){
+        Intent myPersonalMatchListIntent = new Intent(MainActivity.this, JoinedPersonalMatchListActivity.class);
+        //personalMatchListIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        myPersonalMatchListIntent.putExtra("current_username", currentUser.getUsername());  // Pass username to PersonalMatchListActivity
+        startActivity(myPersonalMatchListIntent);
+        //finish();
+
+    }
+
 }
 
 

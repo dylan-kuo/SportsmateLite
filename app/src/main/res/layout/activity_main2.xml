@@ -64,6 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <!-- Here is the start of Cardview (Create Match)-->
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -71,11 +72,12 @@
                 android:layout_columnWeight="1"
                 app:cardMaxElevation="6dp"
                 app:cardCornerRadius="12dp"
-                android:layout_margin="12dp" >
+                android:layout_margin="12dp"
+                app:cardUseCompatPadding="true" >
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:orientation="vertical"
                     android:clickable="true"
@@ -95,13 +97,16 @@
                         android:layout_marginTop="12dp"
                         android:text="Create Match"
                         android:textColor="#6f6f6f"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
+            <!-- Here is the end of Cardview (Create Match)-->
 
 
+            <!-- Here is the start of Cardview (Join Match)-->
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -109,11 +114,12 @@
                 android:layout_columnWeight="1"
                 app:cardMaxElevation="6dp"
                 app:cardCornerRadius="12dp"
-                android:layout_margin="12dp" >
+                android:layout_margin="12dp"
+                app:cardUseCompatPadding="true" >
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:orientation="vertical"
                     android:clickable="true"
@@ -133,11 +139,101 @@
                         android:layout_marginTop="12dp"
                         android:text="Join Match"
                         android:textColor="#6f6f6f"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
+            <!-- Here is the end of Cardview (Join Match)-->
+
+
+
+            <!-- Here is the start of Cardview (Joined Match)-->
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                app:cardMaxElevation="6dp"
+                app:cardCornerRadius="12dp"
+                android:layout_margin="12dp"
+                app:cardUseCompatPadding="true" >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:clickable="true"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:id="@+id/main_joined_personal_match"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/calendar" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="12dp"
+                        android:text="Schedule"
+                        android:textColor="#6f6f6f"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+
+
+            </androidx.cardview.widget.CardView>
+            <!-- Here is the end of Cardview (Joined Match)-->
+
+
+            <!-- Here is the start of Cardview (Joined Match)-->
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                app:cardMaxElevation="6dp"
+                app:cardCornerRadius="12dp"
+                android:layout_margin="12dp"
+                app:cardUseCompatPadding="true" >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:clickable="true"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:id="@+id/main_team"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/team" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="12dp"
+                        android:text="Team"
+                        android:textColor="#6f6f6f"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+            <!-- Here is the end of Cardview (Joined Match)-->
+
 
         </GridLayout>
 
