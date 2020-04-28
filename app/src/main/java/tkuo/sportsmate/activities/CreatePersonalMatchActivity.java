@@ -1,6 +1,5 @@
 package tkuo.sportsmate.activities;
 
-import android.app.Person;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,9 +14,12 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.Calendar;
+import java.util.List;
+
 import android.app.DatePickerDialog;
 
 import tkuo.sportsmate.R;
+
 import tkuo.sportsmate.model.PersonalMatch;
 import tkuo.sportsmate.model.Player;
 import tkuo.sportsmate.model.User;
@@ -325,7 +327,8 @@ public class CreatePersonalMatchActivity extends AppCompatActivity {
 
         // Because we don't have pmatch_id on hand(it is created automatically by database), so
         // we need to get the data from database again. see below:
-        PersonalMatch personalMatch = databaseHelper.getSinglePersonalMatch(player.getPlayerId()).get(0);
+        List<PersonalMatch> personalMatchList = databaseHelper.getSinglePersonalMatch(player.getPlayerId());
+        PersonalMatch personalMatch = personalMatchList.get(personalMatchList.size()-1);
 
         // Insert to personal_match_player table
         databaseHelper.addPersonalMatchPlayer(player, personalMatch);
