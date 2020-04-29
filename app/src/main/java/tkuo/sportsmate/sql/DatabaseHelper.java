@@ -149,7 +149,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Create Personal Match Players Table
         db.execSQL(CREATE_PERSONAL_MATCH_PLAYER_TABLE);
         // Create Team Match Table
-        db.execSQL(CREATE_PLAYER_TABLE);
+        db.execSQL(CREATE_TEAM_TABLE);
     }
 
 

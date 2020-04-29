@@ -67,7 +67,7 @@ public class Team implements Parcelable {
 
     @Override
     public String toString() {
-        return "User{" + "team_id='" + team_id + "\'" + ", admin_id='" + admin_id + "\'" +
+        return "Team{" + "team_id='" + team_id + "\'" + ", admin_id='" + admin_id + "\'" +
                 ", team_name='" + team_name + "\'" + "}";
     }
 }
