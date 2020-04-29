@@ -2,8 +2,10 @@ package tkuo.sportsmate.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-public class PersonalMatch implements Parcelable {
+public class PersonalMatch implements Parcelable, Comparable<PersonalMatch> {
     // This is used for Parcelable
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
         public PersonalMatch createFromParcel(Parcel in) {
@@ -142,4 +144,40 @@ public class PersonalMatch implements Parcelable {
                 ", game_type='" + game_type + ", num_initial_players='" + num_initial_players +
                 ", num_players_joined='" + num_players_joined + "}";
     }
+
+
+    // This method is to implement compare dates in the list<PersonalMatch>
+    // The list will be ordered by game_date in ascending order
+    @Override
+    public int compareTo(PersonalMatch p) {
+        // convert string date to date
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy");
+        SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
+
+
+        int compareResult = 0; // default. meaning two dates are the same
+
+        try {
+            Date date = dateFormatter.parse(game_date);
+            //Date startAt = timeFormatter.parse(start_at);
+            //Date endAt = timeFormatter.parse(end_at);
+
+            Date pDate = dateFormatter.parse(p.getGameDate());
+            //Date pStartAt = timeFormatter.parse(p.getStartAt());
+            //Date pEndAt = timeFormatter.parse(p.end_at);
+
+            if (date == null || pDate == null) {
+                return 0;
+            }
+            compareResult = date.compareTo(pDate);
+
+
+        } catch (java.text.ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return compareResult;
+    }
+
 }

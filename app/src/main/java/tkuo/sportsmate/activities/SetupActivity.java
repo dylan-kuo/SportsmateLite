@@ -1,6 +1,7 @@
 package tkuo.sportsmate.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import tkuo.sportsmate.R;
@@ -78,10 +80,6 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         // Receive user object from setup activity
         Intent i = getIntent();
         currentUser = i.getParcelableExtra("current_user_obj");
-
-        // Below is the old method using Serializable
-        //Intent i = getIntent();
-        //currentUser = (User) i.getSerializableExtra("current_user_obj"); // Get the user object passed from register activity
 
     }
 
@@ -168,6 +166,8 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
             currentUser.setGender(str_selected_gender);
             databaseHelper.addUser(currentUser);
             Toast.makeText(this, "Welcome " + currentUser.getFirstName(), Toast.LENGTH_SHORT).show();
+
+            storeToSharedPreference();
             sendUserToMainActivity();
         }
     }
@@ -181,9 +181,20 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         Intent mainIntent = new Intent(SetupActivity.this, MainActivity.class);
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);  // Do this to prevent user from going back to Register activity unless clicking logout
 
-        mainIntent.putExtra("current_user_obj", currentUser);  // Pass user object to main activity
+        //mainIntent.putExtra("current_user_obj", currentUser);  // Pass user object to main activity
         startActivity(mainIntent);
         finish();
     }
 
+
+    /**
+     * This method is to store username to shared preference object
+     */
+    private void storeToSharedPreference() {
+        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean("Logged", true);
+        editor.putString("Username", currentUser.getUsername());
+        editor.apply();
+    }
 }

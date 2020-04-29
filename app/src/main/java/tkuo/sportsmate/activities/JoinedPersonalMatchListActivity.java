@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import tkuo.sportsmate.R;
@@ -76,6 +77,7 @@ public class JoinedPersonalMatchListActivity extends AppCompatActivity {
             pmatchList.add(personalMatch);
         }
 
+        Collections.sort(pmatchList); // sort the list based on date (ascending order)
         personalMatchAdapter = new PersonalMatchAdapter(this, pmatchList);
         listView.setAdapter(personalMatchAdapter);
         personalMatchAdapter.notifyDataSetChanged();

@@ -2,6 +2,7 @@ package tkuo.sportsmate.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -9,6 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import tkuo.sportsmate.R;
 import tkuo.sportsmate.model.User;
@@ -24,6 +26,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private InputValidation inputValidation;
     private DatabaseHelper databaseHelper;
+    private User user;
 
 
     @Override
@@ -105,6 +108,12 @@ public class LoginActivity extends AppCompatActivity {
 
         // Validate the user
         if (databaseHelper.checkUser(str_userName, str_userPassword)) {
+
+            user = databaseHelper.getSingleUser(str_userName).get(0);
+
+            // store username to shared preference
+            storeToSharedPreference();
+
             sendUserToMainActivity();
             emptyInputEditText();
         } else {
@@ -120,14 +129,28 @@ public class LoginActivity extends AppCompatActivity {
         Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);  // Do this to prevent user from going back to login activity unless clicking logout
 
-        String username = userName.getText().toString().trim();
-        User user = databaseHelper.getSingleUser(username).get(0);
-        mainIntent.putExtra("current_user_obj", user);  // Pass user object to main activity
+        // This 3 line code below is for sending current logged user object to main activity
+        //String username = userName.getText().toString().trim();
+        //user = databaseHelper.getSingleUser(username).get(0);
+        //mainIntent.putExtra("current_user_obj", user);  // Pass user object to main activity
 
         startActivity(mainIntent);
         Toast.makeText(this, "Welcome back " + user.getFirstName(), Toast.LENGTH_SHORT).show();
         finish();
     }
+
+
+    /**
+     * This method is to store username to shared preference object
+     */
+    private void storeToSharedPreference() {
+        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean("Logged", true);
+        editor.putString("Username", user.getUsername());
+        editor.apply();
+    }
+
 
     /**
      * This method is to switch the user to register activity
