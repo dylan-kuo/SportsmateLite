@@ -11,16 +11,16 @@
         android:title="Join Match"
         android:icon="@drawable/personal_match" />
 
+    <item
+        android:id="@+id/nav_schedule"
+        android:title="Schedule"
+        android:icon="@drawable/calendar" />
+
     <!-- TODO NOT COMPLETED PART
     <item
         android:id="@+id/nav_team_match"
         android:icon="@drawable/team_match"
         android:title="Team Match" />
-
-    <item
-        android:id="@+id/nav_home"
-        android:title="Home"
-        android:icon="@drawable/home" />
 
     <item
         android:id="@+id/nav_profile"

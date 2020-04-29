@@ -4,11 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ListView;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import tkuo.sportsmate.R;
 import tkuo.sportsmate.adapters.PersonalMatchAdapter;
 import tkuo.sportsmate.model.PersonalMatch;
+import tkuo.sportsmate.model.Player;
 import tkuo.sportsmate.sql.DatabaseHelper;
 
 public class JoinedPersonalMatchListActivity extends AppCompatActivity {
@@ -58,8 +61,22 @@ public class JoinedPersonalMatchListActivity extends AppCompatActivity {
      */
     public void loadMatchInListView() {
 
-        personalMatchList = databaseHelper.getAllPersonalMatch(); // get all personal matches
-        personalMatchAdapter = new PersonalMatchAdapter(this, personalMatchList);
+        //step #1 - get the corresponding player object
+        Player player = databaseHelper.getSinglePlayer(currentUsername).get(0);
+
+        //step #2 - get joined match_id
+        List<Long> match_id_list = databaseHelper.getJoinedPersonalMatchId(player.getPlayerId());
+
+        //step #3 - get all personal matches joined or created by the player
+        List<PersonalMatch> pmatchList = new ArrayList<>(); // create a list for storing joined personal matches
+
+        for (int i = 0; i < match_id_list.size(); i++) {
+            long matchId = match_id_list.get(i); // match_id
+            PersonalMatch personalMatch = databaseHelper.getPersonalMatchesByMatchId(matchId).get(0);
+            pmatchList.add(personalMatch);
+        }
+
+        personalMatchAdapter = new PersonalMatchAdapter(this, pmatchList);
         listView.setAdapter(personalMatchAdapter);
         personalMatchAdapter.notifyDataSetChanged();
     }

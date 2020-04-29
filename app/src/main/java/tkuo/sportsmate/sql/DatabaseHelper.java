@@ -777,6 +777,78 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
+    /**
+     * This method is to fetch a list of personal matches based on match id
+     *
+     * @return list
+     */
+    public List<PersonalMatch> getPersonalMatchesByMatchId(Long matchId) {
+
+        // Array of columns to fetch
+        String[] columns = {
+                COLUMN_PERSONAL_MATCH_ID,
+                COLUMN_PERSONAL_MATCH_PLAYER_ID,
+                COLUMN_PERSONAL_MATCH_LOCATION,
+                COLUMN_PERSONAL_MATCH_DATE,
+                COLUMN_PERSONAL_MATCH_START_AT,
+                COLUMN_PERSONAL_MATCH_END_AT,
+                COLUMN_PERSONAL_MATCH_GAME_TYPE,
+                COLUMN_PERSONAL_MATCH_INIT_PLAYERS,
+                COLUMN_PERSONAL_MATCH_NUM_PLAYER_JOINED
+        };
+
+        // Selection criteria
+        String selection = COLUMN_PERSONAL_MATCH_ID + " = ?";
+
+        // Selection argument
+        String[] selectionArgs = {Long.toString(matchId)};
+
+        // Sorting orders
+        String sortOrder =
+                //COLUMN_PERSONAL_MATCH_ID + " DESC";
+                COLUMN_PERSONAL_MATCH_DATE + " ASC, " + COLUMN_PERSONAL_MATCH_START_AT + " ASC";
+
+        List<PersonalMatch> personalMatchList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Query the user table
+        /**
+         * Here query function is used to fetch records from personalMatch table this function works like we use sql query.
+         * SELECT pmatch_id, host_player_id, location, date, start_at, end_at, game_type, num_initial_players, num_players_joined FROM user ORDER BY user_first_name;
+         */
+        Cursor cursor = db.query(TABLE_PERSONAL_MATCH,
+                columns,          // columns to return
+                selection,    // columns for the WHERE clause
+                selectionArgs, // the values for the WHERE clause
+                null,     // group the rows
+                null,      // filter by row groups
+                sortOrder);        // the sort order
+
+        // Traversing through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                PersonalMatch personalMatch = new PersonalMatch();
+                personalMatch.setPmatchId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_PERSONAL_MATCH_ID))));
+                personalMatch.setHostPlayerId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_PERSONAL_MATCH_PLAYER_ID))));
+                personalMatch.setLocation(cursor.getString(cursor.getColumnIndex(COLUMN_PERSONAL_MATCH_LOCATION)));
+                personalMatch.setGameDate(cursor.getString(cursor.getColumnIndex(COLUMN_PERSONAL_MATCH_DATE)));
+                personalMatch.setStartAt(cursor.getString(cursor.getColumnIndex(COLUMN_PERSONAL_MATCH_START_AT)));
+                personalMatch.setEndAt(cursor.getString(cursor.getColumnIndex(COLUMN_PERSONAL_MATCH_END_AT)));
+                personalMatch.setGameType(cursor.getString(cursor.getColumnIndex(COLUMN_PERSONAL_MATCH_GAME_TYPE)));
+                personalMatch.setNumInitialPlayers(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_PERSONAL_MATCH_INIT_PLAYERS))));
+                personalMatch.setNumPlayersJoined(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_PERSONAL_MATCH_NUM_PLAYER_JOINED))));
+                // Adding user record to list
+                personalMatchList.add(personalMatch);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+
+        // Return user list
+        return personalMatchList;
+    }
+
+
 
     /**
      * This method to update personal_match record
@@ -884,6 +956,63 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         return false;
+    }
+
+
+
+    /**
+     * This method is to return the list of id of joined(including created) personal match by a specified player
+     *
+     * @param playerid
+     * @return list of ids
+     */
+    public List<Long> getJoinedPersonalMatchId(long playerid) {
+        // Array of columns to fetch
+        String[] columns = {
+                COLUMN_PERSONAL_MATCH_PLAYERS_MATCH_ID
+        };
+
+        // Selection criteria
+        String selection = COLUMN_PERSONAL_MATCH_PLAYERS_PLAYER_ID + " = ?";
+
+        // Selection argument
+        String[] selectionArgs = {Long.toString(playerid)};
+
+        List<Long> personalMatchIdList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+
+        // Query the user table
+        /**
+         * Here query function is used to fetch records from personal_match_players table this function works like we use sql query.
+         * SELECT match_id FROM personal_match_players WHERE p_id = {playerid};
+         */
+
+
+
+        Cursor cursor = db.query(TABLE_PERSONAL_MATCH_PLAYERS,
+                columns,          // columns to return
+                selection,    // columns for the WHERE clause
+                selectionArgs, // the values for the WHERE clause
+                null,     // group the rows
+                null,      // filter by row groups
+                null);        // the sort order
+
+
+        // Traversing through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                // Adding match_id to list
+                personalMatchIdList.add(Long.parseLong(cursor.getString(cursor.getColumnIndex(COLUMN_PERSONAL_MATCH_PLAYERS_MATCH_ID))));
+
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        // Return user list
+        return personalMatchIdList;
     }
 
 

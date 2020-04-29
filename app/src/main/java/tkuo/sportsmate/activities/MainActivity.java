@@ -193,6 +193,11 @@ public class MainActivity extends AppCompatActivity  {
                 sendUserToPersonalMatchListActivity();
                 break;
 
+
+            case R.id.nav_schedule:
+                sendUserToJoinedPersonalMatchListActivity();
+                break;
+
                 /* TODO NOT COMPLETED PART
             case R.id.nav_team_match:
                 Toast.makeText(this, "Team Match", Toast.LENGTH_SHORT).show();
@@ -202,9 +207,7 @@ public class MainActivity extends AppCompatActivity  {
                 Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show();
                 break;
 
-            case R.id.nav_home:
-                Toast.makeText(this, "Home", Toast.LENGTH_SHORT).show();
-                break;
+
 
             case R.id.nav_setting:
                 Toast.makeText(this, "Setting", Toast.LENGTH_SHORT).show();
