@@ -311,6 +311,7 @@ public class CreatePersonalMatchActivity extends AppCompatActivity {
         newPersonalMatch.setEndAt(str_endTime);
         newPersonalMatch.setGameType(str_gameType);
         newPersonalMatch.setNumInitialPlayers(Integer.parseInt(numOfInitPlayer));
+        newPersonalMatch.setNumPlayersJoined(0);
 
         // Post data to personal_match table in the SQLite db
         databaseHelper.addPersonalMatch(newPersonalMatch);
