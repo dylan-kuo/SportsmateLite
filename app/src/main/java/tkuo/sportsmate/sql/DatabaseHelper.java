@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import tkuo.sportsmate.model.PersonalMatch;
 import tkuo.sportsmate.model.PersonalMatchPlayers;
 import tkuo.sportsmate.model.Player;
+import tkuo.sportsmate.model.Team;
 import tkuo.sportsmate.model.User;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_PERSONAL_MATCH = "personal_match";
     private static final String TABLE_PLAYER = "player";
     private static final String TABLE_PERSONAL_MATCH_PLAYERS = "personal_match_players";
+    private static final String TABLE_TEAM = "team";
 
     // User Table Column names
     private static final String COLUMN_USER_ID = "user_id";
@@ -56,6 +58,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // personal_match_players Table Column names
     private static final String COLUMN_PERSONAL_MATCH_PLAYERS_MATCH_ID = "match_id";
     private static final String COLUMN_PERSONAL_MATCH_PLAYERS_PLAYER_ID = "p_id";
+
+    // team Table Column names
+    private static final String COLUMN_TEAM_TEAM_ID = "team_id";
+    private static final String COLUMN_TEAM_ADMIN_ID = "admin_id";
+    private static final String COLUMN_TEAM_TEAM_NAME = "team_name";
 
 
     // *** USER TABLE ***
@@ -110,6 +117,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private String DROP_PERSONAL_MATCH_PLAYER_TABLE = "DROP TABLE IF EXISTS " + TABLE_PERSONAL_MATCH_PLAYERS;
 
 
+    // *** TEAM TABLE ***
+    /** Create team table sql query */
+    private String CREATE_TEAM_TABLE = "CREATE TABLE " + TABLE_TEAM + "("
+            + COLUMN_TEAM_TEAM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_TEAM_ADMIN_ID
+            + " INTEGER," + COLUMN_TEAM_TEAM_NAME + "TEXT,"
+            +  " FOREIGN KEY (" + COLUMN_TEAM_ADMIN_ID + ") REFERENCES " + TABLE_PLAYER + "(" + COLUMN_PLAYER_PLAYER_ID + "));";
+
+    /** Drop team table sql query */
+    private String DROP_TEAM_TABLE = "DROP TABLE IF EXISTS " + TABLE_TEAM;
+
+
     /**
      * Constructor
      *
@@ -130,6 +148,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_PERSONAL_MATCH_TABLE);
         // Create Personal Match Players Table
         db.execSQL(CREATE_PERSONAL_MATCH_PLAYER_TABLE);
+        // Create Team Match Table
+        db.execSQL(CREATE_PLAYER_TABLE);
     }
 
 
@@ -143,6 +163,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(DROP_PERSONAL_MATCH_TABLE);
         // Drop Personal Match Player Table if exists
         db.execSQL(DROP_PERSONAL_MATCH_PLAYER_TABLE);
+        // Drop Team Match Table if exists
+        db.execSQL(DROP_TEAM_TABLE);
 
         // Create tables again
         onCreate(db);
@@ -182,6 +204,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_PLAYER_USER_ID, userId);
         db.insert(TABLE_PLAYER, null, values);
+        db.close();
+    }
+
+
+    /**
+     * This method is to add team record
+     *
+     * @param team, player
+     */
+    public void addTeam(Team team, Player player) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_TEAM_ADMIN_ID, player.getPlayerId());
+        values.put(COLUMN_TEAM_TEAM_NAME, team.getTeamName());
+        db.insert(TABLE_TEAM, null, values);
         db.close();
     }
 
@@ -1013,6 +1051,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // Return user list
         return personalMatchIdList;
+    }
+
+
+    /**
+     * This method to update team record
+     *
+     * @param team
+     */
+    public void updateTeam(Team team) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_TEAM_TEAM_ID, team.getTeamId());
+        values.put(COLUMN_TEAM_ADMIN_ID, team.getAdminId());
+        values.put(COLUMN_TEAM_TEAM_NAME, team.getTeamName());
+
+        // Updating row
+        db.update(TABLE_TEAM, values, COLUMN_TEAM_ADMIN_ID + " = ?",
+                new String[]{String.valueOf(team.getAdminId())});
+        db.close();
     }
 
 
