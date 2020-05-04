@@ -15,11 +15,13 @@ The Android app lets you:
 - Create / Join a team
 - Create / Join a Personal Match Game
 
+## Report
+[Sportsmate Report](https://github.com/dylan-kuo/SportsmateLite/blob/master/Reports/Sportsmate%20Final%20Prestantation.pdf "Sportsmate Report")
 ## Screenshots
 
 Splash Page             |  Main Page
 :-------------------------:|:-------------------------:
-![](https://github.com/dylan-kuo/SportsmateLite/blob/master/screenshots/splash.png)  |  ![](https://github.com/dylan-kuo/SportsmateLite/blob/master/screenshots/main.png)
+![](https://github.com/dylan-kuo/SportsmateLite/blob/master/screenshots/splash.png)  |  ![](https://github.com/dylan-kuo/SportsmateLite/blob/master/screenshots/main.png).
 
 Navigation Bar           |  Join Match
 :-------------------------:|:-------------------------:
