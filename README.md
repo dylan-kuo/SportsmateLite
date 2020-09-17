@@ -15,6 +15,13 @@ The Android app lets you:
 - Create / Join a team
 - Create / Join a Personal Match Game
 
+## CLI Version
+We initially built the command line interface app for this project before we migrated the featrues to an Android App.
+The command line interface version has the complete features including User Registration, Personal Match, Team Match, Team, Resources).
+Please refer to the report for detailed explanation.
+
+[Ver. 1 - Command Line Interface ](https://github.com/vpasq/sportsmate)
+
 ## Report
 [Sportsmate Report](https://github.com/dylan-kuo/SportsmateLite/blob/master/Reports/Sportsmate%20Final%20Prestantation.pdf "Sportsmate Report")
 ## Screenshots
