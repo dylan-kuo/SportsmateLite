@@ -1,6 +1,6 @@
 # Sportsmate (SQLite)
 An android Java project of a sports media application with a focus on Basketball.
-<img src="https://github.com/dylan-kuo/SportsmateApp/blob/master/app/src/main/res/drawable/logo.png"  width="400" height="400">
+<img src="https://github.com/dylan-kuo/SportsmateLite/blob/master/app/src/main/res/drawable/logo.png?raw=true"  width="500" height="500">
 ## Product Vision
 For lots of basketball players or amateurs who need related resources of basketball to play,
 SportsMate is a basketball social app that provides gym reserving, team system, and match
